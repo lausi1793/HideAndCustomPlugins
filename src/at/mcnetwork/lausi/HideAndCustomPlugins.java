@@ -90,17 +90,26 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	  public void onCommand(PlayerCommandPreprocessEvent event) {
 	    boolean plugins = event.getMessage().startsWith("/plugins");
+	    boolean cplugins = event.getMessage().startsWith("/PLUGINS");
 	    boolean pl = event.getMessage().startsWith("/pl");
+	    boolean cpl = event.getMessage().startsWith("/PL");
 	    boolean gc = event.getMessage().startsWith("/gc");
+	    boolean cgc = event.getMessage().startsWith("/GC");
 	    boolean unknown = event.getMessage().startsWith("/?");
 	    boolean version = event.getMessage().startsWith("/version");
 	    boolean ver = event.getMessage().startsWith("/ver");
+	    boolean cversion = event.getMessage().startsWith("/VERSION");
+	    boolean cver = event.getMessage().startsWith("/VER");
 	    boolean bukkitplugin = event.getMessage().startsWith("/bukkit:plugins");
+	    boolean cbukkitplugin = event.getMessage().startsWith("/BUKKIT:PLUGINS");
 	    boolean about = event.getMessage().startsWith("/about");
 	    boolean a = event.getMessage().startsWith("/a");
+	    boolean cabout = event.getMessage().startsWith("/ABOUT");
+	    boolean ca = event.getMessage().startsWith("/A");
 	    boolean bukkitversion = event.getMessage().startsWith("/bukkit:version");
+	    boolean cbukkitversion = event.getMessage().startsWith("/BUKKIT:VERSION");
 	    Player player = event.getPlayer();
-	    if ((plugins) || (pl) ||  (unknown) ||  (bukkitplugin)) {
+	    if ((plugins) || (pl) ||  (unknown) ||  (bukkitplugin) ||  (cbukkitplugin) || (cpl) ||  (cplugins)) {
 	    	if(!player.hasPermission("hideandcustomplugins.bypass")){
 	      event.setCancelled(true);
 	      String defaultMessage = "§a";
@@ -113,7 +122,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    }
 	  
 	
-	if ((version) || (ver) ||  (gc) ||  (a) ||  (about) ||  (bukkitversion)) {
+	if ((version) || (ver) ||  (gc) ||  (a) ||  (about) ||  (bukkitversion) ||  (cbukkitversion) ||  (cgc) ||  (ca) ||  (cabout) ||  (cver) ||  (cversion)) {
     	if(!player.hasPermission("hideandcustomplugins.bypass")){
     		Player p = event.getPlayer();
       event.setCancelled(true);
