@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -15,8 +16,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-
-
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -34,6 +33,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	
 	ProtocolManager protocolManager;
 	public ArrayList<String> plugins = new ArrayList();
+	private Logger log;
 	String version;
 	String name;
 	
@@ -42,7 +42,6 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 		name = getDescription().getName();
 		saveDefaultConfig();
 		loadConfig();
-		
 		Bukkit.getServer().getPluginManager().registerEvents(this, this);
 	    this.protocolManager = ProtocolLibrary.getProtocolManager();
 	    this.protocolManager.addPacketListener(new PacketAdapter(this, ListenerPriority.NORMAL, new PacketType[] { PacketType.Play.Client.TAB_COMPLETE })
@@ -84,32 +83,23 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 		FileConfiguration cfg = this.getConfig();
 		cfg.options().copyDefaults(true);
 		this.saveConfig();
-		Logger.getLogger("Minecraft").info("[" + name + "] Version: " + version+ " Successfully reloaded config.yml");
+		Logger.getLogger("Minecraft").info("[" + name + "] Version: " + version+ " Successfully loaded config.yml");
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	  public void onCommand(PlayerCommandPreprocessEvent event) {
-	    boolean plugins = event.getMessage().startsWith("/plugins");
-	    boolean cplugins = event.getMessage().startsWith("/PLUGINS");
-	    boolean pl = event.getMessage().startsWith("/pl");
-	    boolean cpl = event.getMessage().startsWith("/PL");
-	    boolean gc = event.getMessage().startsWith("/gc");
-	    boolean cgc = event.getMessage().startsWith("/GC");
-	    boolean unknown = event.getMessage().startsWith("/?");
-	    boolean version = event.getMessage().startsWith("/version");
-	    boolean ver = event.getMessage().startsWith("/ver");
-	    boolean cversion = event.getMessage().startsWith("/VERSION");
-	    boolean cver = event.getMessage().startsWith("/VER");
-	    boolean bukkitplugin = event.getMessage().startsWith("/bukkit:plugins");
-	    boolean cbukkitplugin = event.getMessage().startsWith("/BUKKIT:PLUGINS");
-	    boolean about = event.getMessage().startsWith("/about");
-	    boolean a = event.getMessage().startsWith("/a");
-	    boolean cabout = event.getMessage().startsWith("/ABOUT");
-	    boolean ca = event.getMessage().startsWith("/A");
-	    boolean bukkitversion = event.getMessage().startsWith("/bukkit:version");
-	    boolean cbukkitversion = event.getMessage().startsWith("/BUKKIT:VERSION");
+	    boolean plugins = event.getMessage().equalsIgnoreCase("/plugins");
+	    boolean pl = event.getMessage().equalsIgnoreCase("/pl");
+	    boolean gc = event.getMessage().equalsIgnoreCase("/gc");
+	    boolean unknown = event.getMessage().equalsIgnoreCase("/?");
+	    boolean version = event.getMessage().equalsIgnoreCase("/version");
+	    boolean ver = event.getMessage().equalsIgnoreCase("/ver");
+	    boolean bukkitplugin = event.getMessage().equalsIgnoreCase("/bukkit:plugins");
+	    boolean about = event.getMessage().equalsIgnoreCase("/about");
+	    boolean a = event.getMessage().equalsIgnoreCase("/a");
+	    boolean bukkitversion = event.getMessage().equalsIgnoreCase("/bukkit:version");
 	    Player player = event.getPlayer();
-	    if ((plugins) || (pl) ||  (unknown) ||  (bukkitplugin) ||  (cbukkitplugin) || (cpl) ||  (cplugins)) {
+	    if ((plugins) || (pl) ||  (unknown) ||  (bukkitplugin)) {
 	    	if(!player.hasPermission("hideandcustomplugins.bypass")){
 	      event.setCancelled(true);
 	      String defaultMessage = "§a";
@@ -117,12 +107,12 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	        defaultMessage = defaultMessage + plugin + ", ";
 	      }
 	      defaultMessage = defaultMessage.substring(0, defaultMessage.lastIndexOf(", "));
-	      player.sendMessage(ChatColor.WHITE + "Plugins(" + this.plugins.size() + "):" + ChatColor.GREEN + defaultMessage.replaceAll(", ", new StringBuilder().append(ChatColor.WHITE).append(", ").append(ChatColor.GREEN).toString()));
+	      player.sendMessage(ChatColor.WHITE + "Plugins(" + this.plugins.size() + "): " + ChatColor.GREEN + defaultMessage.replaceAll(", ", new StringBuilder().append(ChatColor.WHITE).append(", ").append(ChatColor.GREEN).toString()));
 	    }
 	    }
 	  
 	
-	if ((version) || (ver) ||  (gc) ||  (a) ||  (about) ||  (bukkitversion) ||  (cbukkitversion) ||  (cgc) ||  (ca) ||  (cabout) ||  (cver) ||  (cversion)) {
+	if ((version) || (ver) ||  (gc) ||  (a) ||  (about) ||  (bukkitversion)) {
     	if(!player.hasPermission("hideandcustomplugins.bypass")){
     		Player p = event.getPlayer();
       event.setCancelled(true);
@@ -158,8 +148,9 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
       if (p != null)
       {
         p.sendMessage("§e==========[ HideAndCustomPlugins Help Version: " + ChatColor.YELLOW + version + " §e]==========");
-        p.sendMessage(ChatColor.GREEN + "Hy " + p.getDisplayName() + ChatColor.GREEN + "! Here are all the commands of HideAndCustomPlugins");
+        p.sendMessage(ChatColor.GREEN + "Hy " + p.getDisplayName() + ChatColor.GREEN + "!");
         p.sendMessage("§9/help HideAndCustomPlugins §aShows you all the commands that are available.\n");
+        p.sendMessage("§aHideAndCustomPlugins protects the server against pluginthieves");
         p.sendMessage("§5Version: " + ChatColor.DARK_PURPLE + version);
         p.sendMessage("§5Created by: " + ChatColor.DARK_PURPLE + "lausi1793");
         p.sendMessage("§e==========[ HideAndCustomPlugins Help Version: " + ChatColor.YELLOW + version + " §e]==========");
@@ -172,7 +163,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	
 	return false;
 	 }
-	
+
 	
 
 }
