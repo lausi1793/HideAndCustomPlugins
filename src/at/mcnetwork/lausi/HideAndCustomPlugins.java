@@ -1,8 +1,11 @@
 package at.mcnetwork.lausi;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+
 
 
 import org.bukkit.Bukkit;
@@ -15,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.comphenix.protocol.PacketType;
@@ -43,6 +47,11 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 		saveDefaultConfig();
 		loadConfig();
 		Bukkit.getServer().getPluginManager().registerEvents(this, this);
+		try {
+			new Updater(this, 80016, "http://dev.bukkit.org/bukkit-plugins/hideandcustomplugins/", "SearchForUpdates").search();
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		}
 	    this.protocolManager = ProtocolLibrary.getProtocolManager();
 	    this.protocolManager.addPacketListener(new PacketAdapter(this, ListenerPriority.NORMAL, new PacketType[] { PacketType.Play.Client.TAB_COMPLETE })
 	    {
@@ -95,11 +104,12 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    boolean version = event.getMessage().equalsIgnoreCase("/version");
 	    boolean ver = event.getMessage().equalsIgnoreCase("/ver");
 	    boolean bukkitplugin = event.getMessage().equalsIgnoreCase("/bukkit:plugins");
+	    boolean bukkitunknown = event.getMessage().equalsIgnoreCase("/bukkit:?");
 	    boolean about = event.getMessage().equalsIgnoreCase("/about");
 	    boolean a = event.getMessage().equalsIgnoreCase("/a");
 	    boolean bukkitversion = event.getMessage().equalsIgnoreCase("/bukkit:version");
 	    Player player = event.getPlayer();
-	    if ((plugins) || (pl) ||  (unknown) ||  (bukkitplugin)) {
+	    if ((plugins) || (pl) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin)) {
 	    	if(!player.hasPermission("hideandcustomplugins.bypass")){
 	      event.setCancelled(true);
 	      String defaultMessage = "§a";
@@ -121,6 +131,18 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
     }
   }
 	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onJoin(PlayerJoinEvent event){
+		Player player = event.getPlayer();
+		if((getConfig().getBoolean("HideAndCustomPlugins.updateNotification")) && (player.hasPermission("hideandcustomplugins.bypass"))){
+		try {
+			new Updater(this, 80016, "http://dev.bukkit.org/bukkit-plugins/hideandcustomplugins/", "SearchForUpdates").search(player);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		}
+	}
+	
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
 	  {
@@ -129,33 +151,37 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	      p = (Player)sender;
 	    }
 	    
-	    if (cmd.getName().equalsIgnoreCase("hcpreload")) {
-		      if (p != null) {
-		        if (p.hasPermission("hideandcustomplugins.reload")) {
-		          reloadConfig();
-		          p.sendMessage(ChatColor.GREEN + "Reloaded " + getDescription().getName() + " config.yml!");
-		          return true;
-		        }
-		      }
-		      else {
-		        sender.sendMessage("This command is not supported for the console.");
-		      }
-		      return true;
-		    }
-	
 	if (cmd.getName().equalsIgnoreCase("hcp"))
     {
       if (p != null)
       {
-        p.sendMessage("§e==========[ HideAndCustomPlugins Help Version: " + ChatColor.YELLOW + version + " §e]==========");
+    	  if(args.length == 0){
+        p.sendMessage("§e========[ HideAndCustomPlugins Help Version: " + ChatColor.YELLOW + version + " §e]========");
         p.sendMessage(ChatColor.GREEN + "Hy " + p.getDisplayName() + ChatColor.GREEN + "!");
-        p.sendMessage("§9/help HideAndCustomPlugins §aShows you all the commands that are available.\n");
-        p.sendMessage("§aHideAndCustomPlugins protects the server against pluginthieves");
+        p.sendMessage("§9/hcp reload - Reloads the config.yml.\n");
+        p.sendMessage("§aHCP protects the server against pluginthieves");
         p.sendMessage("§5Version: " + ChatColor.DARK_PURPLE + version);
         p.sendMessage("§5Created by: " + ChatColor.DARK_PURPLE + "lausi1793");
-        p.sendMessage("§e==========[ HideAndCustomPlugins Help Version: " + ChatColor.YELLOW + version + " §e]==========");
+        p.sendMessage("§e========[ HideAndCustomPlugins Help Version: " + ChatColor.YELLOW + version + " §e]========");
 
         return true;
+    	  }
+    	  if(args[0].equalsIgnoreCase("reload")){
+    		  if (p.hasPermission("hideandcustomplugins.reload")) {
+		          reloadConfig();
+		          p.sendMessage(ChatColor.GREEN + "Reloaded " + getDescription().getName() + " config.yml!");
+		          return true;
+		        }else{
+		        	 p.sendMessage("§cYou dont have the permission\n§c-hideandcustomplugins.reload");
+		        	 return true;
+		        }
+    	  }
+    	  
+    	  if(args.length > 1){
+    		  
+    		  p.sendMessage("§cToo many arguments!\n§a/hcp - Information about the plugin\n/hcp reload - reloads the config.yml");
+    		  
+    	  }
       }else{
       sender.sendMessage("This command is not supported for the console.");
       }
