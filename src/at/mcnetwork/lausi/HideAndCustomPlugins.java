@@ -47,10 +47,12 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 		saveDefaultConfig();
 		loadConfig();
 		Bukkit.getServer().getPluginManager().registerEvents(this, this);
+		if(getConfig().getBoolean("HideAndCustomPlugins.updateNotification")){
 		try {
 			new Updater(this, 80016, "http://dev.bukkit.org/bukkit-plugins/hideandcustomplugins/", "SearchForUpdates").search();
 		} catch (MalformedURLException e1) {
 			e1.printStackTrace();
+		}
 		}
 	    this.protocolManager = ProtocolLibrary.getProtocolManager();
 	    this.protocolManager.addPacketListener(new PacketAdapter(this, ListenerPriority.NORMAL, new PacketType[] { PacketType.Play.Client.TAB_COMPLETE })
@@ -108,6 +110,9 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    boolean about = event.getMessage().equalsIgnoreCase("/about");
 	    boolean a = event.getMessage().equalsIgnoreCase("/a");
 	    boolean bukkitversion = event.getMessage().equalsIgnoreCase("/bukkit:version");
+	    boolean bukkithelp = event.getMessage().equalsIgnoreCase("/bukkit:help");
+	    boolean help = event.getMessage().equalsIgnoreCase("/help");
+	    
 	    Player player = event.getPlayer();
 	    if ((plugins) || (pl) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin)) {
 	    	if(!player.hasPermission("hideandcustomplugins.bypass")){
@@ -122,13 +127,23 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    }
 	  
 	
-	if ((version) || (ver) ||  (gc) ||  (a) ||  (about) ||  (bukkitversion)) {
+	if ((version) || (ver) ||  (gc) ||  (a) ||  (about) ||  (bukkitversion) ||  (bukkithelp)) {
     	if(!player.hasPermission("hideandcustomplugins.bypass")){
     		Player p = event.getPlayer();
       event.setCancelled(true);
       p.sendMessage(getConfig().getString("HideAndCustomPlugins.hideversion").replaceAll("&", "§"));
     }
     }
+	
+	if(getConfig().getBoolean("HideAndCustomPlugins.disableHelpCommand")){
+	if (help) {
+    	if(!player.hasPermission("hideandcustomplugins.bypass")){
+    		Player p = event.getPlayer();
+      event.setCancelled(true);
+      p.sendMessage(getConfig().getString("HideAndCustomPlugins.hidehelpmessage").replaceAll("&", "§"));
+    }
+    }
+	}
   }
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
