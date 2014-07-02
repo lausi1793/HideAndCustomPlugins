@@ -66,12 +66,20 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	            }PacketContainer packet = event.getPacket();
 	            String message = ((String)packet.getSpecificModifier(String.class).read(0)).toLowerCase();
 
-	            if (((message.startsWith("/")) && (!message.contains(" "))) 
-	            		|| ((message.startsWith("/ver")) && (!message.contains("  "))) 
-	            		|| ((message.startsWith("/version")) && (!message.contains("  "))) 
-	            		|| ((message.startsWith("/?")) && (!message.contains("  "))) 
-	            		|| ((message.startsWith("/about")) && (!message.contains("  "))) 
-	            		|| ((message.startsWith("/help")) && (!message.contains("  "))))
+	            if (((message.equalsIgnoreCase("/")) && (!message.contains(" "))) 
+	            		|| ((message.equalsIgnoreCase("/ver")) && (!message.contains("  "))) 
+	            		|| ((message.equalsIgnoreCase("/version")) && (!message.contains("  "))) 
+	            		|| ((message.equalsIgnoreCase("/?")) && (!message.contains("  ")))
+	            		|| ((message.equalsIgnoreCase("/bukkit:?")) && (!message.contains("  "))) 
+	            		|| ((message.equalsIgnoreCase("/about")) && (!message.contains("  ")))
+	            		|| ((message.equalsIgnoreCase("/a")) && (!message.contains("  "))) 
+	            		|| ((message.equalsIgnoreCase("/help")) && (!message.contains("  ")))
+	            		|| ((message.equalsIgnoreCase("/bukkit:help")) && (!message.contains("  ")))
+	            		|| ((message.equalsIgnoreCase("/bukkit:ver")) && (!message.contains("  ")))
+	            		|| ((message.equalsIgnoreCase("/bukkit:version")) && (!message.contains("  ")))
+	            		|| ((message.equalsIgnoreCase("/bukkit:a")) && (!message.contains("  ")))
+	            		|| ((message.equalsIgnoreCase("/bukkit:about")) && (!message.contains("  "))))
+	            	
 	            {
 	              event.setCancelled(true);
 	            }
