@@ -1,12 +1,14 @@
 package at.mcnetwork.lausi;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-
-
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,6 +22,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Comparator;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -42,10 +46,18 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	String name;
 	
 	public void onEnable() {
+		try {
+			Metrics metrics = new Metrics(this); metrics.start();
+			} catch (IOException e) { // Failed to submit the stats
+			System.out.println("Error Submitting stats!");
+			}
 		version = getDescription().getVersion();
 		name = getDescription().getName();
 		saveDefaultConfig();
 		loadConfig();
+		final List<String> hiddenCommands = new ArrayList<String>();
+		hiddenCommands.add("all");
+		final boolean all = hiddenCommands.size() > 0 ? ((String)hiddenCommands.get(0)).equalsIgnoreCase("all") : false;
 		Bukkit.getServer().getPluginManager().registerEvents(this, this);
 		if(getConfig().getBoolean("HideAndCustomPlugins.updateNotification")){
 		try {
@@ -54,44 +66,55 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 			e1.printStackTrace();
 		}
 		}
-	    this.protocolManager = ProtocolLibrary.getProtocolManager();
-	    this.protocolManager.addPacketListener(new PacketAdapter(this, ListenerPriority.NORMAL, new PacketType[] { PacketType.Play.Client.TAB_COMPLETE })
+		final ProtocolManager manager = ProtocolLibrary.getProtocolManager();
+
+	    manager.addPacketListener(new PacketAdapter(this, new PacketType[] { PacketType.Play.Client.TAB_COMPLETE })
 	    {
-	      public void onPacketReceiving(PacketEvent event) {
-	        if (event.getPacketType() == PacketType.Play.Client.TAB_COMPLETE)
+	      @SuppressWarnings({ "rawtypes", "unchecked" })
+		public void onPacketReceiving(PacketEvent event) {
+	        if ((event.getPacketType() == PacketType.Play.Client.TAB_COMPLETE) && 
+	          (!event.getPlayer().hasPermission("tab.commands")) && (((String)event.getPacket().getStrings().read(0)).startsWith("/")) && (((String)event.getPacket().getStrings().read(0)).split(" ").length == 1)) {
+	          event.setCancelled(true);
+
+	          String start = (String)event.getPacket().getStrings().read(0);
+	          List list = new ArrayList();
+	          List extra = new ArrayList();
+
+	          String[] tabList = new String[list.size() + extra.size()];
+
+	          for (int index = 0; index < list.size(); index++) {
+	            tabList[index] = ((String)list.get(index));
+	          }
+
+	          for (int index = 0; index < extra.size(); index++) {
+	            tabList[(index + list.size())] = ('/' + (String)extra.get(index));
+	          }
+	          PacketContainer tabComplete = manager.createPacket(PacketType.Play.Server.TAB_COMPLETE);
+	          tabComplete.getStringArrays().write(0, tabList);
 	          try {
-	            if (event.getPlayer().hasPermission("hideandcustomplugins.bypass"))
-	            {
-	              return;
-	            }PacketContainer packet = event.getPacket();
-	            String message = ((String)packet.getSpecificModifier(String.class).read(0)).toLowerCase();
-
-	            if (((message.equalsIgnoreCase("/")) && (!message.contains(" "))) 
-	            		|| ((message.equalsIgnoreCase("/ver")) && (!message.contains("  "))) 
-	            		|| ((message.equalsIgnoreCase("/version")) && (!message.contains("  "))) 
-	            		|| ((message.equalsIgnoreCase("/?")) && (!message.contains("  ")))
-	            		|| ((message.equalsIgnoreCase("/bukkit:?")) && (!message.contains("  "))) 
-	            		|| ((message.equalsIgnoreCase("/about")) && (!message.contains("  ")))
-	            		|| ((message.equalsIgnoreCase("/a")) && (!message.contains("  "))) 
-	            		|| ((message.equalsIgnoreCase("/help")) && (!message.contains("  ")))
-	            		|| ((message.equalsIgnoreCase("/bukkit:help")) && (!message.contains("  ")))
-	            		|| ((message.equalsIgnoreCase("/bukkit:ver")) && (!message.contains("  ")))
-	            		|| ((message.equalsIgnoreCase("/bukkit:version")) && (!message.contains("  ")))
-	            		|| ((message.equalsIgnoreCase("/bukkit:a")) && (!message.contains("  ")))
-	            		|| ((message.equalsIgnoreCase("/bukkit:about")) && (!message.contains("  "))))
-	            	
-	            {
-	              event.setCancelled(true);
-	            }
-	          } catch (FieldAccessException e) { HideAndCustomPlugins.this.getLogger().log(Level.SEVERE, "Couldn't access field.", e); }
-
+	            manager.sendServerPacket(event.getPlayer(), tabComplete);
+	          } catch (InvocationTargetException e) {
+	            e.printStackTrace();
+	          }
+	        }
 	      }
 	    });
+
+	    
+	    
+	    
 	    for (String s : getConfig().getString("HideAndCustomPlugins.plugins").split(", ")) {
 		      this.plugins.add(s);
 		    }
 		Logger.getLogger("Minecraft").info("[" + name + "] Version: " + version + " Plugin has been activated successfully.");
 	}
+	
+	
+	
+	
+	
+	
+	
 	
 	public void onDisable() {
 		this.saveConfig();
