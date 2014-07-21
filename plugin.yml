@@ -1,22 +1,26 @@
 name: HideAndCustomPlugins
 main: at.mcnetwork.lausi.HideAndCustomPlugins
 depend: [ProtocolLib]
-version: 1.3.6
+version: 1.3.7
 author: LauseggerDevelopment
 website: http://McNetwork.at
 commands:
   hcp:
     usage: /hcp
     description: Information about the plugin.
+    permission: hideandcustomplugins.info
 
 permissions:
   hideandcustomplugins.*:
     description: Only OP
     children:
+      hideandcustomplugins.info: true
       hideandcustomplugins.bypass: true
       hideandcustomplugins.reload: true
     default: op
   hideandcustomplugins.reload:
     description: Reload of the config.yml.
   hideandcustomplugins.bypass:
-    description: Bypasses the plugin
+    description: Bypasses the plugin.
+  hideandcustomplugins.info:
+    description: Shows Information about the plugin.
