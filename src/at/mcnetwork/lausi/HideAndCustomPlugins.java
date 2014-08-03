@@ -121,16 +121,16 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    boolean plugins = event.getMessage().equalsIgnoreCase("/plugins");
 	    boolean pl = event.getMessage().equalsIgnoreCase("/pl");
 	    boolean gc = event.getMessage().equalsIgnoreCase("/gc");
-	    boolean unknown = event.getMessage().equalsIgnoreCase("/?");
+	    boolean unknown = event.getMessage().startsWith("/?");
 	    boolean version = event.getMessage().equalsIgnoreCase("/version");
 	    boolean ver = event.getMessage().equalsIgnoreCase("/ver");
 	    boolean bukkitplugin = event.getMessage().equalsIgnoreCase("/bukkit:plugins");
-	    boolean bukkitunknown = event.getMessage().equalsIgnoreCase("/bukkit:?");
+	    boolean bukkitunknown = event.getMessage().startsWith("/bukkit:?");
 	    boolean about = event.getMessage().equalsIgnoreCase("/about");
 	    boolean a = event.getMessage().equalsIgnoreCase("/a");
 	    boolean bukkitversion = event.getMessage().equalsIgnoreCase("/bukkit:version");
-	    boolean bukkithelp = event.getMessage().equalsIgnoreCase("/bukkit:help");
-	    boolean help = event.getMessage().equalsIgnoreCase("/help");
+	    boolean bukkithelp = event.getMessage().startsWith("/bukkit:help");
+	    boolean help = event.getMessage().startsWith("/help");
 	    
 	    Player player = event.getPlayer();
 	    if ((plugins) || (pl) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin)) {
@@ -201,8 +201,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 					p.sendMessage("§cYou dont have the permission\n§c-hideandcustomplugins.info");
 					return true;
 				}
-			}
-			
+			}			
 			if(args[0].equalsIgnoreCase("reload")){
 				if (p.hasPermission("hideandcustomplugins.reload")) {
 					reloadConfig();
@@ -219,7 +218,25 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
     	  }
     	  
 		}else{
-			sender.sendMessage("This command is not supported for the console.");
+			if(args.length == 0){
+					sender.sendMessage("§e========[ HideAndCustomPlugins Help Version: " + ChatColor.YELLOW + version + " §e]========");
+					sender.sendMessage("§9/hcp reload - Reloads the config.yml.\n");
+					sender.sendMessage("§aHCP protects the server against pluginthieves");
+					sender.sendMessage("§5Version: " + ChatColor.DARK_PURPLE + version);
+					sender.sendMessage("§5Created by: " + ChatColor.DARK_PURPLE + "lausi1793");
+					sender.sendMessage("§e========[ HideAndCustomPlugins Help Version: " + ChatColor.YELLOW + version + " §e]========");
+					return true;
+			}			
+			if(args[0].equalsIgnoreCase("reload")){
+					reloadConfig();
+					sender.sendMessage(ChatColor.GREEN + "Reloaded " + getDescription().getName() + " config.yml!");
+					return true;
+    	  }
+    	  
+    	  if(args.length > 1){		  
+    		  sender.sendMessage("§cToo many arguments!\n§a/hcp - Information about the plugin\n/hcp reload - reloads the config.yml");	  
+    	  }
+    	  
 		}
     }
 	
