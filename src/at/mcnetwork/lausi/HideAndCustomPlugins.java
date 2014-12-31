@@ -118,17 +118,17 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	  public void onCommand(PlayerCommandPreprocessEvent event) {
-	    boolean plugins = event.getMessage().equalsIgnoreCase("/plugins");
-	    boolean pl = event.getMessage().equalsIgnoreCase("/pl");
+	    boolean plugins = event.getMessage().startsWith("/plugins");
+	    boolean pl = event.getMessage().startsWith("/pl");
 	    boolean gc = event.getMessage().equalsIgnoreCase("/gc");
 	    boolean unknown = event.getMessage().startsWith("/?");
-	    boolean version = event.getMessage().equalsIgnoreCase("/version");
-	    boolean ver = event.getMessage().equalsIgnoreCase("/ver");
-	    boolean bukkitplugin = event.getMessage().equalsIgnoreCase("/bukkit:plugins");
+	    boolean version = event.getMessage().startsWith("/version");
+	    boolean ver = event.getMessage().startsWith("/ver");
+	    boolean bukkitplugin = event.getMessage().startsWith("/bukkit:plugins");
 	    boolean bukkitunknown = event.getMessage().startsWith("/bukkit:?");
-	    boolean about = event.getMessage().equalsIgnoreCase("/about");
-	    boolean a = event.getMessage().equalsIgnoreCase("/a");
-	    boolean bukkitversion = event.getMessage().equalsIgnoreCase("/bukkit:version");
+	    boolean about = event.getMessage().startsWith("/about");
+	    boolean a = event.getMessage().startsWith("/a");
+	    boolean bukkitversion = event.getMessage().startsWith("/bukkit:version");
 	    boolean bukkithelp = event.getMessage().startsWith("/bukkit:help");
 	    boolean help = event.getMessage().startsWith("/help");
 	    
