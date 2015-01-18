@@ -119,7 +119,8 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	  public void onCommand(PlayerCommandPreprocessEvent event) {
 	    boolean plugins = event.getMessage().startsWith("/plugins");
-	    boolean pl = event.getMessage().startsWith("/pl");
+	    boolean pl = event.getMessage().equalsIgnoreCase("/pl");
+	    boolean pl2 = event.getMessage().startsWith("/pl ");
 	    boolean gc = event.getMessage().equalsIgnoreCase("/gc");
 	    boolean unknown = event.getMessage().startsWith("/?");
 	    boolean version = event.getMessage().startsWith("/version");
@@ -127,13 +128,13 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    boolean bukkitplugin = event.getMessage().startsWith("/bukkit:plugins");
 	    boolean bukkitunknown = event.getMessage().startsWith("/bukkit:?");
 	    boolean about = event.getMessage().startsWith("/about");
-	    boolean a = event.getMessage().startsWith("/a");
+	    boolean a = event.getMessage().equalsIgnoreCase("/a");
 	    boolean bukkitversion = event.getMessage().startsWith("/bukkit:version");
 	    boolean bukkithelp = event.getMessage().startsWith("/bukkit:help");
 	    boolean help = event.getMessage().startsWith("/help");
 	    
 	    Player player = event.getPlayer();
-	    if ((plugins) || (pl) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin)) {
+	    if ((plugins) || (pl)|| (pl2) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin)) {
 	    	if(!player.hasPermission("hideandcustomplugins.bypass")){
 	    		event.setCancelled(true);
 	    		String defaultMessage = "§a";
@@ -150,7 +151,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
     	if(!player.hasPermission("hideandcustomplugins.bypass")){
     		Player p = event.getPlayer();
     		event.setCancelled(true);
-    		p.sendMessage(getConfig().getString("HideAndCustomPlugins.hideversion").replaceAll("&", "§"));
+    		p.sendMessage(getConfig().getString("HideAndCustomPlugins.AccessDenied").replaceAll("&", "§"));
     	}
     }
 	
@@ -159,7 +160,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 			if(!player.hasPermission("hideandcustomplugins.bypass")){
 				Player p = event.getPlayer();
 				event.setCancelled(true);
-				p.sendMessage(getConfig().getString("HideAndCustomPlugins.hidehelpmessage").replaceAll("&", "§"));
+				p.sendMessage(getConfig().getString("HideAndCustomPlugins.AccessDenied").replaceAll("&", "§"));
 			}
 		}
 	}
