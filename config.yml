@@ -1,9 +1,7 @@
 # HideAndCustomPlugins by the Austrian Developer LauseggerDevelopment (lausi1793)
 # Type here your Custom Plugins in the config.yml
-# When disableHelpCommand is false the message hidehelpmessage is useless
 HideAndCustomPlugins:
   updateNotification: true
-  plugins: Here, is, nothing, to, see
-  hideversion: 'I dont think soo ...'
   disableHelpCommand: false
-  hidehelpmessage: '&cYou dont need help'
+  plugins: Here, is, nothing, to, see
+  AccessDenied: 'I dont think soo ...'
