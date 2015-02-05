@@ -126,15 +126,19 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    boolean version = event.getMessage().startsWith("/version");
 	    boolean ver = event.getMessage().startsWith("/ver");
 	    boolean bukkitplugin = event.getMessage().startsWith("/bukkit:plugins");
+	    boolean bukkitpl = event.getMessage().startsWith("/bukkit:pl");
 	    boolean bukkitunknown = event.getMessage().startsWith("/bukkit:?");
 	    boolean about = event.getMessage().startsWith("/about");
 	    boolean a = event.getMessage().equalsIgnoreCase("/a");
+	    boolean bukkitabout = event.getMessage().startsWith("/bukkit:about");
+	    boolean bukkita = event.getMessage().startsWith("/bukkit:a");
 	    boolean bukkitversion = event.getMessage().startsWith("/bukkit:version");
+	    boolean bukkitver = event.getMessage().startsWith("/bukkit:ver");
 	    boolean bukkithelp = event.getMessage().startsWith("/bukkit:help");
 	    boolean help = event.getMessage().startsWith("/help");
 	    
 	    Player player = event.getPlayer();
-	    if ((plugins) || (pl)|| (pl2) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin)) {
+	    if ((plugins) || (pl)|| (pl2) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin) ||  (bukkitpl)) {
 	    	if(!player.hasPermission("hideandcustomplugins.bypass")){
 	    		event.setCancelled(true);
 	    		String defaultMessage = "§a";
@@ -147,7 +151,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    }
 	  
 	
-	if ((version) || (ver) ||  (gc) ||  (a) ||  (about) ||  (bukkitversion) ||  (bukkithelp)) {
+	if ((version) || (ver) ||  (gc) ||  (a) ||  (about) ||  (bukkitversion) ||  (bukkitver)||  (bukkitabout)  ||  (bukkita) ||  (bukkithelp)) {
     	if(!player.hasPermission("hideandcustomplugins.bypass")){
     		Player p = event.getPlayer();
     		event.setCancelled(true);
@@ -224,7 +228,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 					sender.sendMessage("§9/hcp reload - Reloads the config.yml.\n");
 					sender.sendMessage("§aHCP protects the server against pluginthieves");
 					sender.sendMessage("§5Version: " + ChatColor.DARK_PURPLE + version);
-					sender.sendMessage("§5Created by: " + ChatColor.DARK_PURPLE + "lausi1793");
+					sender.sendMessage("§5Created by: " + ChatColor.DARK_PURPLE + "LauseggerDevelopment");
 					sender.sendMessage("§e========[ HideAndCustomPlugins Help Version: " + ChatColor.YELLOW + version + " §e]========");
 					return true;
 			}			
