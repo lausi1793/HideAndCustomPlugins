@@ -122,6 +122,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    boolean pl = event.getMessage().equalsIgnoreCase("/pl");
 	    boolean pl2 = event.getMessage().startsWith("/pl ");
 	    boolean gc = event.getMessage().equalsIgnoreCase("/gc");
+	    boolean icanhasbukkit = event.getMessage().equalsIgnoreCase("/icanhasbukkit");
 	    boolean unknown = event.getMessage().startsWith("/?");
 	    boolean version = event.getMessage().startsWith("/version");
 	    boolean ver = event.getMessage().startsWith("/ver");
@@ -151,7 +152,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    }
 	  
 	
-	if ((version) || (ver) ||  (gc) ||  (a) ||  (about) ||  (bukkitversion) ||  (bukkitver)||  (bukkitabout)  ||  (bukkita) ||  (bukkithelp)) {
+	if ((version) || (ver) ||  (gc) ||  (icanhasbukkit) ||  (a) ||  (about) ||  (bukkitversion) ||  (bukkitver)||  (bukkitabout)  ||  (bukkita) ||  (bukkithelp)) {
     	if(!player.hasPermission("hideandcustomplugins.bypass")){
     		Player p = event.getPlayer();
     		event.setCancelled(true);
