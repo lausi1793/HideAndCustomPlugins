@@ -15,6 +15,7 @@ import org.json.simple.JSONValue;
 
 public class Updater{
   public String versionName;
+  @SuppressWarnings("unused")
   private final int id;
   private int task;
   private final URL url;
