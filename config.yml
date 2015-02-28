@@ -1,7 +1,41 @@
+###
 # HideAndCustomPlugins by the Austrian Developer LauseggerDevelopment (lausi1793)
-# Type here your Custom Plugins in the config.yml
-HideAndCustomPlugins:
-  updateNotification: true
-  disableHelpCommand: false
-  plugins: Here, is, nothing, to, see
-  AccessDenied: 'I dont think soo ...'
+# HideAndCustomPlugins on DevBukkit: http://dev.bukkit.org/bukkit-plugins/hideandcustomplugins/
+# HideAndCustomPlugins on Github: https://github.com/lausi1793/HideAndCustomPlugins
+###
+
+###
+# What type of Updater, if any, we should choose.
+#
+# true: Only check if there is a new version available, notify appropriate people.
+# false: Ignore Updater altogether.
+###
+updateNotification: true
+
+###
+# Silently disable Helpmessage without displaying messages.
+#
+# This takes a value of either "true" or "false"
+###
+disableHelpCommand: false
+
+###
+# Custom plugins
+#
+# Type here your custom plugins for the message, which is given to the players
+###
+plugins: Here, is, nothing, to, see
+
+###
+# Silently disable all messages, which are showing information about your server or the plugins without displaying messages.
+#
+# This takes a value of either "true" or "false"
+###
+disableMessages: false
+
+###
+# Custom error message
+#
+# Type here your custom error message, which is given to the players
+###
+AccessDenied: 'I dont think so ...'
