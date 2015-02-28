@@ -28,7 +28,6 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 
 
-
 public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	
 	
@@ -45,15 +44,15 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 		
 		try {
 			Metrics metrics = new Metrics(this); metrics.start();
+			Logger.getLogger("Minecraft").info("[" + name + "] Version: " + version + " Metrics started: http://mcstats.org/plugin/HideAndCustomPlugins");
+			
 			} catch (IOException e) {
 			System.out.println("Error Submitting stats!");
 			}
-		
-		saveDefaultConfig();
 		loadConfig();
 		Bukkit.getServer().getPluginManager().registerEvents(this, this);
 		
-		if(getConfig().getBoolean("HideAndCustomPlugins.updateNotification")){
+		if(getConfig().getBoolean("updateNotification")){
 			try {
 				new Updater(this, 80016, "http://dev.bukkit.org/bukkit-plugins/hideandcustomplugins/", "SearchForUpdates").search();
 			} catch (MalformedURLException e1) {
@@ -67,7 +66,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 		@SuppressWarnings("rawtypes")
 		public void onPacketReceiving(PacketEvent event) {
 	        if ((event.getPacketType() == PacketType.Play.Client.TAB_COMPLETE) 
-	        		&& (!event.getPlayer().hasPermission("tab.commands")) 
+	        		&& (!event.getPlayer().hasPermission("hideandcustomplugins.bypass")) 
 	        		&& (((String)event.getPacket().getStrings().read(0)).startsWith("/")) 
 	        		&& (((String)event.getPacket().getStrings().read(0)).split(" ").length == 1)) {
 	        	
@@ -97,7 +96,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	      }
 	    });
     
-	    for (String s : getConfig().getString("HideAndCustomPlugins.plugins").split(", ")) {
+	    for (String s : getConfig().getString("plugins").split(", ")) {
 		      this.plugins.add(s);
 		    }
 		Logger.getLogger("Minecraft").info("[" + name + "] Version: " + version + " Plugin has been activated successfully.");
@@ -105,15 +104,15 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	
 	
 	public void onDisable() {
-		this.saveConfig();
+		saveDefaultConfig();
 		Logger.getLogger("Minecraft").info("[" + name + "] Version: " + version + " Plugin was disabled successfully.");
 	}
 	
 	private void loadConfig() {
 		FileConfiguration cfg = this.getConfig();
 		cfg.options().copyDefaults(true);
-		this.saveConfig();
-		Logger.getLogger("Minecraft").info("[" + name + "] Version: " + version+ " Successfully loaded config.yml");
+		this.saveDefaultConfig();
+		Logger.getLogger("Minecraft").info("[" + name + "] Version: " + version+ " Successfully reloaded config.yml");
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -121,8 +120,9 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    boolean plugins = event.getMessage().startsWith("/plugins");
 	    boolean pl = event.getMessage().equalsIgnoreCase("/pl");
 	    boolean pl2 = event.getMessage().startsWith("/pl ");
+	    boolean plugman = event.getMessage().startsWith("/plugman list");
 	    boolean gc = event.getMessage().equalsIgnoreCase("/gc");
-	    boolean icanhasbukkit = event.getMessage().equalsIgnoreCase("/icanhasbukkit");
+	    boolean icanhasbukkit = event.getMessage().startsWith("/icanhasbukkit");
 	    boolean unknown = event.getMessage().startsWith("/?");
 	    boolean version = event.getMessage().startsWith("/version");
 	    boolean ver = event.getMessage().startsWith("/ver");
@@ -139,33 +139,44 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    boolean help = event.getMessage().startsWith("/help");
 	    
 	    Player player = event.getPlayer();
-	    if ((plugins) || (pl)|| (pl2) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin) ||  (bukkitpl)) {
+	    
+	    if(getConfig().getBoolean("disableMessages")){ 
+	    	if ((plugins) || (pl) || (pl2)|| (plugman) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin) ||  (bukkitpl) || (version) || (ver) ||  (gc) ||  (icanhasbukkit) ||  (a) ||  (about) ||  (bukkitversion) ||  (bukkitver)||  (bukkitabout)  ||  (bukkita) ||  (bukkithelp)) {
+	 	    	if(!player.hasPermission("hideandcustomplugins.bypass")){
+	 	    		event.setCancelled(true);}
+	 	    }
+	    
+	    }else{
+	    	
+	    	if ((plugins) || (pl) || (pl2) || (plugman) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin) ||  (bukkitpl)) {
+		    	if(!player.hasPermission("hideandcustomplugins.bypass")){
+		    		event.setCancelled(true);
+		    		String defaultMessage = "§a";
+		    		for (String plugin : this.plugins) {
+		    			defaultMessage = defaultMessage + plugin + ", ";
+		    		}
+		    		defaultMessage = defaultMessage.substring(0, defaultMessage.lastIndexOf(", "));
+		    		player.sendMessage(ChatColor.WHITE + "Plugins (" + this.plugins.size() + "): " + ChatColor.GREEN + defaultMessage.replaceAll(", ", new StringBuilder().append(ChatColor.WHITE).append(", ").append(ChatColor.GREEN).toString()));
+		    	}
+		    }
+		  
+		
+		if ((version) || (ver) ||  (gc) ||  (icanhasbukkit) ||  (a) ||  (about) ||  (bukkitversion) ||  (bukkitver)||  (bukkitabout)  ||  (bukkita) ||  (bukkithelp)) {
 	    	if(!player.hasPermission("hideandcustomplugins.bypass")){
+	    		Player p = event.getPlayer();
 	    		event.setCancelled(true);
-	    		String defaultMessage = "§a";
-	    		for (String plugin : this.plugins) {
-	    			defaultMessage = defaultMessage + plugin + ", ";
-	    		}
-	    		defaultMessage = defaultMessage.substring(0, defaultMessage.lastIndexOf(", "));
-	    		player.sendMessage(ChatColor.WHITE + "Plugins(" + this.plugins.size() + "): " + ChatColor.GREEN + defaultMessage.replaceAll(", ", new StringBuilder().append(ChatColor.WHITE).append(", ").append(ChatColor.GREEN).toString()));
+	    		p.sendMessage(getConfig().getString("AccessDenied").replaceAll("&", "§"));
 	    	}
 	    }
-	  
+	    	
+	    }
 	
-	if ((version) || (ver) ||  (gc) ||  (icanhasbukkit) ||  (a) ||  (about) ||  (bukkitversion) ||  (bukkitver)||  (bukkitabout)  ||  (bukkita) ||  (bukkithelp)) {
-    	if(!player.hasPermission("hideandcustomplugins.bypass")){
-    		Player p = event.getPlayer();
-    		event.setCancelled(true);
-    		p.sendMessage(getConfig().getString("HideAndCustomPlugins.AccessDenied").replaceAll("&", "§"));
-    	}
-    }
-	
-	if(getConfig().getBoolean("HideAndCustomPlugins.disableHelpCommand")){
+	if(getConfig().getBoolean("disableHelpCommand")){
 		if (help) {
 			if(!player.hasPermission("hideandcustomplugins.bypass")){
 				Player p = event.getPlayer();
 				event.setCancelled(true);
-				p.sendMessage(getConfig().getString("HideAndCustomPlugins.AccessDenied").replaceAll("&", "§"));
+				p.sendMessage(getConfig().getString("AccessDenied").replaceAll("&", "§"));
 			}
 		}
 	}
@@ -211,7 +222,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 			if(args[0].equalsIgnoreCase("reload")){
 				if (p.hasPermission("hideandcustomplugins.reload")) {
 					reloadConfig();
-					p.sendMessage(ChatColor.GREEN + "Reloaded " + getDescription().getName() + " config.yml!");
+					p.sendMessage(ChatColor.GREEN + "Reloaded the config.yml of " + getDescription().getName() + " v" + getDescription().getVersion());
 					return true;
 		        }else{
 		        	 p.sendMessage("§cYou dont have the permission\n§c-hideandcustomplugins.reload");
@@ -232,12 +243,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 					sender.sendMessage("§5Created by: " + ChatColor.DARK_PURPLE + "LauseggerDevelopment");
 					sender.sendMessage("§e========[ HideAndCustomPlugins Help Version: " + ChatColor.YELLOW + version + " §e]========");
 					return true;
-			}			
-			if(args[0].equalsIgnoreCase("reload")){
-					reloadConfig();
-					sender.sendMessage(ChatColor.GREEN + "Reloaded " + getDescription().getName() + " config.yml!");
-					return true;
-    	  }
+			}
     	  
     	  if(args.length > 1){		  
     		  sender.sendMessage("§cToo many arguments!\n§a/hcp - Information about the plugin\n/hcp reload - reloads the config.yml");	  
