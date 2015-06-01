@@ -27,12 +27,18 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 
-
+/**
+ * 
+ * @author Michael Lausegger
+ * @version 1.4.7
+ *
+ */
 public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	
 	
 	ProtocolManager protocolManager;
 	public ArrayList<String> plugins = new ArrayList<String>();
+	public ArrayList<String> blacklist = new ArrayList<String>();
 	String version;
 	String name;
 	
@@ -52,7 +58,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 		loadConfig();
 		Bukkit.getServer().getPluginManager().registerEvents(this, this);
 		
-		if(getConfig().getBoolean("updateNotification")){
+		if(getConfig().getBoolean("update-notification")){
 			try {
 				new Updater(this, 80016, "http://dev.bukkit.org/bukkit-plugins/hideandcustomplugins/", "SearchForUpdates").search();
 			} catch (MalformedURLException e1) {
@@ -115,12 +121,13 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 		Logger.getLogger("Minecraft").info("[" + name + "] Version: " + version+ " Successfully reloaded config.yml");
 	}
 	
+	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	  public void onCommand(PlayerCommandPreprocessEvent event) {
 	    boolean plugins = event.getMessage().startsWith("/plugins");
 	    boolean pl = event.getMessage().equalsIgnoreCase("/pl");
 	    boolean pl2 = event.getMessage().startsWith("/pl ");
-	    boolean plugman = event.getMessage().startsWith("/plugman list");
+	    // boolean plugman = event.getMessage().startsWith("/plugman list");
 	    boolean gc = event.getMessage().equalsIgnoreCase("/gc");
 	    boolean icanhasbukkit = event.getMessage().startsWith("/icanhasbukkit");
 	    boolean unknown = event.getMessage().startsWith("/?");
@@ -139,16 +146,28 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    boolean help = event.getMessage().startsWith("/help");
 	    
 	    Player player = event.getPlayer();
+	    String command = event.getMessage();
 	    
-	    if(getConfig().getBoolean("disableMessages")){ 
-	    	if ((plugins) || (pl) || (pl2)|| (plugman) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin) ||  (bukkitpl) || (version) || (ver) ||  (gc) ||  (icanhasbukkit) ||  (a) ||  (about) ||  (bukkitversion) ||  (bukkitver)||  (bukkitabout)  ||  (bukkita) ||  (bukkithelp)) {
+	    if(!player.hasPermission("hideandcustomplugins.bypass")){
+	    	for(int i = 0; i < getConfig().getList("blocked-cmds").size(); i++){
+	    		String playercommand = (String) getConfig().getList("blocked-cmds").get(i);
+	    		if(command.toUpperCase().contains("/" + playercommand.toUpperCase())){
+	    			Player p = event.getPlayer();
+	    			p.sendMessage(getConfig().getString("error-message").replaceAll("&", "§"));
+	    			event.setCancelled(true);
+	    		}
+	    	}
+	    }
+	    
+	    if(getConfig().getBoolean("disable-messages")){ 
+	    	if ((plugins) || (pl) || (pl2) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin) ||  (bukkitpl) || (version) || (ver) ||  (gc) ||  (icanhasbukkit) ||  (a) ||  (about) ||  (bukkitversion) ||  (bukkitver)||  (bukkitabout)  ||  (bukkita) ||  (bukkithelp)) {
 	 	    	if(!player.hasPermission("hideandcustomplugins.bypass")){
 	 	    		event.setCancelled(true);}
 	 	    }
 	    
 	    }else{
 	    	
-	    	if ((plugins) || (pl) || (pl2) || (plugman) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin) ||  (bukkitpl)) {
+	    	if ((plugins) || (pl) || (pl2) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin) ||  (bukkitpl)) {
 		    	if(!player.hasPermission("hideandcustomplugins.bypass")){
 		    		event.setCancelled(true);
 		    		String defaultMessage = "§a";
@@ -165,18 +184,18 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    	if(!player.hasPermission("hideandcustomplugins.bypass")){
 	    		Player p = event.getPlayer();
 	    		event.setCancelled(true);
-	    		p.sendMessage(getConfig().getString("AccessDenied").replaceAll("&", "§"));
+	    		p.sendMessage(getConfig().getString("error-message").replaceAll("&", "§"));
 	    	}
 	    }
 	    	
 	    }
 	
-	if(getConfig().getBoolean("disableHelpCommand")){
+	if(getConfig().getBoolean("disable-help-command")){
 		if (help) {
 			if(!player.hasPermission("hideandcustomplugins.bypass")){
 				Player p = event.getPlayer();
 				event.setCancelled(true);
-				p.sendMessage(getConfig().getString("AccessDenied").replaceAll("&", "§"));
+				p.sendMessage(getConfig().getString("error-message").replaceAll("&", "§"));
 			}
 		}
 	}
@@ -195,12 +214,16 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	}
 	
 	
+	
+	
+	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
 
 	Player p = null;
 	if ((sender instanceof Player)) {
 		p = (Player)sender;
 	}
+	
 	    
 	if (cmd.getName().equalsIgnoreCase("hcp")){
 		if (p != null){
