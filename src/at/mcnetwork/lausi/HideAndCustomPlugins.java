@@ -1,5 +1,6 @@
 package at.mcnetwork.lausi;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -29,8 +30,9 @@ import com.comphenix.protocol.events.PacketEvent;
 
 /**
  * 
- * @author Michael Lausegger
- * @version 1.4.7
+ * @author Michael Lausegger | LauseggerDevelopment
+ * @version 1.4.8
+ * @since May 16, 2014
  *
  */
 public class HideAndCustomPlugins extends JavaPlugin implements Listener {
@@ -127,7 +129,6 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    boolean plugins = event.getMessage().startsWith("/plugins");
 	    boolean pl = event.getMessage().equalsIgnoreCase("/pl");
 	    boolean pl2 = event.getMessage().startsWith("/pl ");
-	    // boolean plugman = event.getMessage().startsWith("/plugman list");
 	    boolean gc = event.getMessage().equalsIgnoreCase("/gc");
 	    boolean icanhasbukkit = event.getMessage().startsWith("/icanhasbukkit");
 	    boolean unknown = event.getMessage().startsWith("/?");
@@ -223,19 +224,18 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	if ((sender instanceof Player)) {
 		p = (Player)sender;
 	}
-	
 	    
 	if (cmd.getName().equalsIgnoreCase("hcp")){
 		if (p != null){
 			if(args.length == 0){
 				if (p.hasPermission("hideandcustomplugins.info")) {
-					p.sendMessage("§e========[ HideAndCustomPlugins Help Version: " + ChatColor.YELLOW + version + " §e]========");
+					p.sendMessage("§e=========[ HideAndCustomPlugins | Version: " + ChatColor.YELLOW + version + " §e]=========");
 					p.sendMessage(ChatColor.GREEN + "Hy " + p.getDisplayName() + ChatColor.GREEN + "!");
 					p.sendMessage("§9/hcp reload - Reloads the config.yml.\n");
 					p.sendMessage("§aHCP protects the server against pluginthieves");
 					p.sendMessage("§5Version: " + ChatColor.DARK_PURPLE + version);
-					p.sendMessage("§5Created by: " + ChatColor.DARK_PURPLE + "lausi1793");
-					p.sendMessage("§e========[ HideAndCustomPlugins Help Version: " + ChatColor.YELLOW + version + " §e]========");
+					p.sendMessage("§5Created by: " + ChatColor.DARK_PURPLE + "LauseggerDevelopment");
+					p.sendMessage("§e=========[ HideAndCustomPlugins | Version: " + ChatColor.YELLOW + version + " §e]=========");
 					return true;
 				}else{
 					p.sendMessage("§cYou dont have the permission\n§c-hideandcustomplugins.info");
@@ -243,7 +243,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 				}
 			}			
 			if(args[0].equalsIgnoreCase("reload")){
-				if (p.hasPermission("hideandcustomplugins.reload")) {
+				if (p.hasPermission("hideandcustomplugins.reload")){
 					reloadConfig();
 					p.sendMessage(ChatColor.GREEN + "Reloaded the config.yml of " + getDescription().getName() + " v" + getDescription().getVersion());
 					return true;
@@ -251,26 +251,26 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 		        	 p.sendMessage("§cYou dont have the permission\n§c-hideandcustomplugins.reload");
 		        	 return true;
 		        }
-    	  }
-    	  
-    	  if(args.length > 1){		  
-    		  p.sendMessage("§cToo many arguments!\n§a/hcp - Information about the plugin\n/hcp reload - reloads the config.yml");	  
-    	  }
-    	  
+			}
+			if((args.length > 0) && !(args[0].equalsIgnoreCase("reload"))){		  
+	    		  sender.sendMessage("§cFalse or to many arguments!\n§a/hcp - Information about the plugin");
+	    		  return true;
+	    	}
 		}else{
 			if(args.length == 0){
-					sender.sendMessage("§e========[ HideAndCustomPlugins Help Version: " + ChatColor.YELLOW + version + " §e]========");
+					sender.sendMessage("§e=========[ HideAndCustomPlugins | Version: " + ChatColor.YELLOW + version + " §e]=========");
 					sender.sendMessage("§9/hcp reload - Reloads the config.yml.\n");
 					sender.sendMessage("§aHCP protects the server against pluginthieves");
 					sender.sendMessage("§5Version: " + ChatColor.DARK_PURPLE + version);
 					sender.sendMessage("§5Created by: " + ChatColor.DARK_PURPLE + "LauseggerDevelopment");
-					sender.sendMessage("§e========[ HideAndCustomPlugins Help Version: " + ChatColor.YELLOW + version + " §e]========");
+					sender.sendMessage("§e=========[ HideAndCustomPlugins | Version: " + ChatColor.YELLOW + version + " §e]=========");
 					return true;
 			}
     	  
-    	  if(args.length > 1){		  
-    		  sender.sendMessage("§cToo many arguments!\n§a/hcp - Information about the plugin\n/hcp reload - reloads the config.yml");	  
-    	  }
+			if((args.length > 0) && !(args[0].equalsIgnoreCase("reload"))){		  
+	    		  sender.sendMessage("§cFalse or to many arguments!\n§a/hcp - Information about the plugin");
+	    		  return true;
+	    	}
     	  
 		}
     }
