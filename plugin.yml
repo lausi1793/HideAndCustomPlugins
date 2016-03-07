@@ -1,7 +1,7 @@
 name: HideAndCustomPlugins
 main: at.mcnetwork.lausi.HideAndCustomPlugins
 depend: [ProtocolLib]
-version: 1.4.7
+version: 1.5
 author: LauseggerDevelopment
 website: http://McNetwork.at
 commands:
