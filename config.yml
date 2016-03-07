@@ -39,3 +39,4 @@ disableMessages: false
 # Type here your custom error message, which is given to the players
 ###
 AccessDenied: 'I dont think so ...'
+
