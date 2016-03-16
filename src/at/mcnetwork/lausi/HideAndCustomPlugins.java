@@ -1,6 +1,5 @@
 package at.mcnetwork.lausi;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -31,7 +30,7 @@ import com.comphenix.protocol.events.PacketEvent;
 /**
  * 
  * @author Michael Lausegger | LauseggerDevelopment
- * @version 1.5
+ * @version 1.5.1
  * @since May 16, 2014
  *
  */
@@ -75,8 +74,8 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 		public void onPacketReceiving(PacketEvent event) {
 	        if ((event.getPacketType() == PacketType.Play.Client.TAB_COMPLETE) 
 	        		&& (!event.getPlayer().hasPermission("hideandcustomplugins.bypass")) 
-	        		&& (((String)event.getPacket().getStrings().read(0)).startsWith("/")) 
-	        		&& (((String)event.getPacket().getStrings().read(0)).split(" ").length == 1)) {
+	        		&& (((String)event.getPacket().getStrings().read(0)).startsWith("/"))
+	        		) {
 	        	
 	          event.setCancelled(true);
 
@@ -128,7 +127,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	  public void onCommand(PlayerCommandPreprocessEvent event) {
 	    boolean plugins = event.getMessage().startsWith("/plugins");
 	    boolean pl = event.getMessage().equalsIgnoreCase("/pl");
-	    boolean pl2 = event.getMessage().startsWith("/pl ");
+	    boolean pl2 = event.getMessage().startsWith("/pl");
 	    boolean gc = event.getMessage().equalsIgnoreCase("/gc");
 	    boolean icanhasbukkit = event.getMessage().startsWith("/icanhasbukkit");
 	    boolean unknown = event.getMessage().startsWith("/?");
