@@ -143,7 +143,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    boolean bukkitversion = event.getMessage().startsWith("/bukkit:version");
 	    boolean bukkitver = event.getMessage().startsWith("/bukkit:ver");
 	    boolean bukkithelp = event.getMessage().startsWith("/bukkit:help");
-	    boolean help = event.getMessage().startsWith("/help");
+	    boolean help = event.getMessage().startsWith("/help") && event.getMessage().split(" ")[0].equalsIgnoreCase("/helpop");
 	    
 	    Player player = event.getPlayer();
 	    String command = event.getMessage();
