@@ -30,7 +30,7 @@ import com.comphenix.protocol.events.PacketEvent;
 /**
  * 
  * @author Michael Lausegger | LauseggerDevelopment
- * @version 1.6.1
+ * @version 1.6.2
  * @since May 16, 2014
  *
  */
@@ -143,7 +143,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    boolean bukkitversion = event.getMessage().startsWith("/bukkit:version");
 	    boolean bukkitver = event.getMessage().startsWith("/bukkit:ver");
 	    boolean bukkithelp = event.getMessage().startsWith("/bukkit:help");
-	    boolean help = event.getMessage().startsWith("/help");
+	    boolean help = event.getMessage().equalsIgnoreCase("/help");
 	    
 	    Player player = event.getPlayer();
 	    String command = event.getMessage();
