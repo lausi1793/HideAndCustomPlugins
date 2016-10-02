@@ -30,7 +30,7 @@ import com.comphenix.protocol.events.PacketEvent;
 /**
  * 
  * @author Michael Lausegger | LauseggerDevelopment
- * @version 1.6.2
+ * @version 1.6.3
  * @since May 16, 2014
  *
  */
@@ -75,7 +75,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	        if ((event.getPacketType() == PacketType.Play.Client.TAB_COMPLETE) 
 	        		&& (!event.getPlayer().hasPermission("hideandcustomplugins.bypass")) 
 	        		&& (((String)event.getPacket().getStrings().read(0)).startsWith("/"))
-	        		) {
+	        		&& (((String)event.getPacket().getStrings().read(0)).split(" ").length == 1)) {
 	        	
 	          event.setCancelled(true);
 
@@ -101,6 +101,8 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	          	}
 	        }
 	      }
+		
+		
 	    });
     
 	    for (String s : getConfig().getString("plugins").split(", ")) {
@@ -125,24 +127,23 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	  public void onCommand(PlayerCommandPreprocessEvent event) {
-	    boolean plugins = event.getMessage().startsWith("/plugins");
-	    boolean pl = event.getMessage().equalsIgnoreCase("/pl");
-	    boolean pl2 = event.getMessage().startsWith("/pl");
+	    boolean plugins = event.getMessage().toLowerCase().startsWith("/plugins");
+	    boolean pl = event.getMessage().toLowerCase().startsWith("/pl") && !event.getMessage().toLowerCase().startsWith("/plotme") && !event.getMessage().toLowerCase().startsWith("/pluginmanager") && !event.getMessage().toLowerCase().startsWith("/plugman");
 	    boolean gc = event.getMessage().equalsIgnoreCase("/gc");
-	    boolean icanhasbukkit = event.getMessage().startsWith("/icanhasbukkit");
-	    boolean unknown = event.getMessage().startsWith("/?");
-	    boolean version = event.getMessage().startsWith("/version");
-	    boolean ver = event.getMessage().startsWith("/ver");
-	    boolean bukkitplugin = event.getMessage().startsWith("/bukkit:plugins");
-	    boolean bukkitpl = event.getMessage().startsWith("/bukkit:pl");
-	    boolean bukkitunknown = event.getMessage().startsWith("/bukkit:?");
-	    boolean about = event.getMessage().startsWith("/about");
+	    boolean icanhasbukkit = event.getMessage().toLowerCase().startsWith("/icanhasbukkit");
+	    boolean unknown = event.getMessage().toLowerCase().startsWith("/?");
+	    boolean version = event.getMessage().toLowerCase().startsWith("/version");
+	    boolean ver = event.getMessage().toLowerCase().startsWith("/ver");
+	    boolean bukkitplugin = event.getMessage().toLowerCase().startsWith("/bukkit:plugins");
+	    boolean bukkitpl = event.getMessage().toLowerCase().startsWith("/bukkit:pl");
+	    boolean bukkitunknown = event.getMessage().toLowerCase().startsWith("/bukkit:?");
+	    boolean about = event.getMessage().toLowerCase().startsWith("/about");
 	    boolean a = event.getMessage().equalsIgnoreCase("/a");
-	    boolean bukkitabout = event.getMessage().startsWith("/bukkit:about");
-	    boolean bukkita = event.getMessage().startsWith("/bukkit:a");
-	    boolean bukkitversion = event.getMessage().startsWith("/bukkit:version");
-	    boolean bukkitver = event.getMessage().startsWith("/bukkit:ver");
-	    boolean bukkithelp = event.getMessage().startsWith("/bukkit:help");
+	    boolean bukkitabout = event.getMessage().toLowerCase().startsWith("/bukkit:about");
+	    boolean bukkita = event.getMessage().toLowerCase().startsWith("/bukkit:a");
+	    boolean bukkitversion = event.getMessage().toLowerCase().startsWith("/bukkit:version");
+	    boolean bukkitver = event.getMessage().toLowerCase().startsWith("/bukkit:ver");
+	    boolean bukkithelp = event.getMessage().toLowerCase().startsWith("/bukkit:help");
 	    boolean help = event.getMessage().equalsIgnoreCase("/help");
 	    
 	    Player player = event.getPlayer();
@@ -160,14 +161,14 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    }
 	    
 	    if(getConfig().getBoolean("disable-messages")){ 
-	    	if ((plugins) || (pl) || (pl2) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin) ||  (bukkitpl) || (version) || (ver) ||  (gc) ||  (icanhasbukkit) ||  (a) ||  (about) ||  (bukkitversion) ||  (bukkitver)||  (bukkitabout)  ||  (bukkita) ||  (bukkithelp)) {
+	    	if ((plugins) || (pl) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin) ||  (bukkitpl) || (version) || (ver) ||  (gc) ||  (icanhasbukkit) ||  (a) ||  (about) ||  (bukkitversion) ||  (bukkitver)||  (bukkitabout)  ||  (bukkita) ||  (bukkithelp)) {
 	 	    	if(!player.hasPermission("hideandcustomplugins.bypass")){
 	 	    		event.setCancelled(true);}
 	 	    }
 	    
 	    }else{
 	    	
-	    	if ((plugins) || (pl) || (pl2) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin) ||  (bukkitpl)) {
+	    	if ((plugins) || (pl) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin) ||  (bukkitpl)) {
 		    	if(!player.hasPermission("hideandcustomplugins.bypass")){
 		    		event.setCancelled(true);
 		    		String defaultMessage = "§a";
