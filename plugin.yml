@@ -1,7 +1,7 @@
 name: HideAndCustomPlugins
 main: at.mcnetwork.lausi.HideAndCustomPlugins
 depend: [ProtocolLib]
-version: 1.7
+version: 1.7.2
 author: LauseggerDevelopment
 website: http://dev.bukkit.org/bukkit-plugins/hideandcustomplugins/
 commands:
