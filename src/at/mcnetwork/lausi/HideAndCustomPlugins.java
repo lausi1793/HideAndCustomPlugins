@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,6 +20,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -30,7 +33,7 @@ import com.comphenix.protocol.events.PacketEvent;
 /**
  * 
  * @author Michael Lausegger | LauseggerDevelopment
- * @version 1.7.1
+ * @version 1.7.2
  * @since May 16, 2014
  *
  */
@@ -124,7 +127,6 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 		Logger.getLogger("Minecraft").info("[" + name + "] Version: " + version+ " Successfully reloaded config.yml");
 	}
 	
-	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	  public void onCommand(PlayerCommandPreprocessEvent event) {
 	    boolean plugins = event.getMessage().toLowerCase().startsWith("/plugins");
@@ -164,33 +166,69 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    	if ((plugins) || (pl) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin) ||  (bukkitpl) || (version) || (ver) ||  (gc) ||  (icanhasbukkit) ||  (a) ||  (about) ||  (bukkitversion) ||  (bukkitver)||  (bukkitabout)  ||  (bukkita) ||  (bukkithelp)) {
 	 	    	if(!player.hasPermission("hideandcustomplugins.bypass")){
 	 	    		event.setCancelled(true);}
-	 	    }
+	 	    	}
 	    
-	    }else{
+	    	}else{
 	    	
-	    	if ((plugins) || (pl) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin) ||  (bukkitpl)) {
-		    	if(!player.hasPermission("hideandcustomplugins.bypass")){
-		    		event.setCancelled(true);
-		    		String defaultMessage = "§a";
-		    		for (String plugin : this.plugins) {
-		    			defaultMessage = defaultMessage + plugin + ", ";
-		    		}
-		    		defaultMessage = defaultMessage.substring(0, defaultMessage.lastIndexOf(", "));
-		    		player.sendMessage(ChatColor.WHITE + "Plugins (" + this.plugins.size() + "): " + ChatColor.GREEN + defaultMessage.replaceAll(", ", new StringBuilder().append(ChatColor.WHITE).append(", ").append(ChatColor.GREEN).toString()));
-		    	}
-		    }
+	    		if ((plugins) || (pl) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin) ||  (bukkitpl)) {
+	    			if(!player.hasPermission("hideandcustomplugins.bypass")){
+	    				event.setCancelled(true);
+	    				String defaultMessage = "§a";
+	    					for (String plugin : this.plugins) {
+	    						defaultMessage = defaultMessage + plugin + ", ";
+	    					}
+	    					defaultMessage = defaultMessage.substring(0, defaultMessage.lastIndexOf(", "));
+	    					player.sendMessage(ChatColor.WHITE + "Plugins (" + this.plugins.size() + "): " + ChatColor.GREEN + defaultMessage.replaceAll(", ", new StringBuilder().append(ChatColor.WHITE).append(", ").append(ChatColor.GREEN).toString()));
+	    			}
+	    		}
 		  
 		
-		if ((version) || (ver) ||  (gc) ||  (icanhasbukkit) ||  (a) ||  (about) ||  (bukkitversion) ||  (bukkitver)||  (bukkitabout)  ||  (bukkita) ||  (bukkithelp)) {
-	    	if(!player.hasPermission("hideandcustomplugins.bypass")){
-	    		Player p = event.getPlayer();
-	    		event.setCancelled(true);
-	    		p.sendMessage(getConfig().getString("error-message").replaceAll("&", "§"));
+	    		if ((version) || (ver) ||  (gc) ||  (icanhasbukkit) ||  (a) ||  (about) ||  (bukkitversion) ||  (bukkitver)||  (bukkitabout)  ||  (bukkita) ||  (bukkithelp)) {
+	    			if(!player.hasPermission("hideandcustomplugins.bypass")){
+	    				Player p = event.getPlayer();
+	    				event.setCancelled(true);
+	    				p.sendMessage(getConfig().getString("error-message").replaceAll("&", "§"));
+	    			}
+	    		}
+	    	
+	    	}
+	    if(getConfig().getBoolean("use-potions")){ 
+	    	if ((plugins) || (pl) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin) ||  (bukkitpl) || (version) || (ver) ||  (gc) ||  (icanhasbukkit) ||  (a) ||  (about) ||  (bukkitversion) ||  (bukkitver)||  (bukkitabout)  ||  (bukkita) ||  (bukkithelp)) {
+	 	    	if(!player.hasPermission("hideandcustomplugins.bypass")){
+	 	    		event.setCancelled(true);
+	 	    		if(getConfig().getString("effect").equalsIgnoreCase("blindness")){
+	 	    			player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, getConfig().getInt("time")*20, 1));
+	 	    		}else if(getConfig().getString("effect").equalsIgnoreCase("slowness")){
+	 	    			player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, getConfig().getInt("time")*20, 1));
+	 	    		}else if(getConfig().getString("effect").equalsIgnoreCase("confusion")){
+	 	    			player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, getConfig().getInt("time")*20, 1));
+	 	    		}else if(getConfig().getString("effect").equalsIgnoreCase("weakness")){
+	 	    			player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, getConfig().getInt("time")*20, 1));
+	 	    		}else{
+	 	    			if ((getConfig().getString("effect").equals(null)) || (getConfig().getString("effect").equalsIgnoreCase("none"))) {
+	 	           return;
+	 	    			}
+	 	    		}
+	 	    		
+	 	    		if((getConfig().getString("sound").equalsIgnoreCase("endermen")) && (getConfig().getString("sound").equalsIgnoreCase("enderman"))){
+	 	    	        player.playSound(player.getLocation(), Sound.ENTITY_ENDERMEN_SCREAM, 2.0F, 1.0F);
+	 	    	    }else if(getConfig().getString("sound").equalsIgnoreCase("blaze")){
+	 	    	        player.playSound(player.getLocation(), Sound.ENTITY_BLAZE_DEATH, 2.0F, 1.0F);
+	 	    	    }else if(getConfig().getString("sound").equalsIgnoreCase("enderdragon")){
+	 	    	        player.playSound(player.getLocation(), Sound.ENTITY_ENDERDRAGON_DEATH, 2.0F, 1.0F);
+	 	    	    }else if(getConfig().getString("sound").equalsIgnoreCase("ghast")){
+	 	    	        player.playSound(player.getLocation(), Sound.ENTITY_GHAST_DEATH, 2.0F, 1.0F);
+	 	    	    }else if(getConfig().getString("sound").equalsIgnoreCase("guardian")){
+	 	    	        player.playSound(player.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_DEATH, 2.0F, 1.0F);
+	 	    	     
+	 	    	    }else{
+	 	    			if ((getConfig().getString("sound").equals(null)) || (getConfig().getString("sound").equalsIgnoreCase("none"))) {
+	 		 	           return;
+	 		 	    	}
+	 		 	    }
+	 	    	}
 	    	}
 	    }
-	    	
-	    }
-	
 	if(getConfig().getBoolean("disable-help-command")){
 		if (help) {
 			if(!player.hasPermission("hideandcustomplugins.bypass")){
@@ -200,7 +238,10 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 			}
 		}
 	}
-  }
+}
+		
+		
+  
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onJoin(PlayerJoinEvent event){
@@ -232,6 +273,9 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 					p.sendMessage("§e=========[ HideAndCustomPlugins | Version: " + ChatColor.YELLOW + version + " §e]=========");
 					p.sendMessage(ChatColor.GREEN + "Hy " + p.getDisplayName() + ChatColor.GREEN + "!");
 					p.sendMessage("§9/hcp reload - Reloads the config.yml.\n");
+					p.sendMessage("§9/hcp add <cmd> - Add a command to the blacklist.\n");
+					p.sendMessage("§9/hcp remove <cmd> - Remove a command from the blacklist.\n");
+					p.sendMessage("§9/hcp blacklist - Shows a list with the blocked commands.\n");
 					p.sendMessage("§aHCP protects the server against pluginthieves");
 					p.sendMessage("§5Version: " + ChatColor.DARK_PURPLE + version);
 					p.sendMessage("§5Created by: " + ChatColor.DARK_PURPLE + "LauseggerDevelopment");
@@ -244,27 +288,120 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 			}			
 			if(args[0].equalsIgnoreCase("reload")){
 				if (p.hasPermission("hideandcustomplugins.reload")){
+					if(args.length == 1){
 					reloadConfig();
 					p.sendMessage(ChatColor.GREEN + "Reloaded the config.yml of " + getDescription().getName() + " v" + getDescription().getVersion());
 					return true;
+					}
+					if(args.length > 1){		  
+			    		  sender.sendMessage("§cFalse or to many arguments!\n§a/hcp - Information about the plugin");
+			    		  return true;
+			    	}
 		        }else{
 		        	 p.sendMessage("§cYou dont have the permission\n§c-hideandcustomplugins.reload");
 		        	 return true;
 		        }
 			}
-			if((args.length > 0) && !(args[0].equalsIgnoreCase("reload"))){		  
-	    		  sender.sendMessage("§cFalse or to many arguments!\n§a/hcp - Information about the plugin");
-	    		  return true;
-	    	}
+			
+			if(args[0].equalsIgnoreCase("add")){
+				if (p.hasPermission("hideandcustomplugins.add")){
+					if(!(args.length < 2) && !(args.length > 2)){
+						ArrayList<String> list = (ArrayList<String>) getConfig().getStringList("blocked-cmds");
+				        if (list.contains(args[1])){
+				        	p.sendMessage(ChatColor.RED + "The Command " + ChatColor.YELLOW + "/" + args[1] + ChatColor.RED + " is already blocked!");
+				        }else{
+				            list.add(args[1]);
+				            getConfig().set("blocked-cmds", list);
+				            saveConfig();
+				            p.sendMessage(ChatColor.GREEN + "Added " + ChatColor.RED + "/" + args[1] + ChatColor.GREEN + " to the blacklist!");
+				        }
+				        return true;
+					}
+					if(args.length > 0){		  
+			    		  p.sendMessage("§cFalse or to many arguments!\n§a/hcp - Information about the plugin");
+			    		  return true;
+			    	}
+					if(args.length > 2){		  
+			    		  p.sendMessage("§cFalse or to many arguments!\n§a/hcp - Information about the plugin");
+			    		  return true;
+			    	}
+		        }else{
+		        	 p.sendMessage("§cYou dont have the permission\n§c-hideandcustomplugins.remove");
+		        	 return true;
+		        }
+			}
+			
+			if(args[0].equalsIgnoreCase("remove")){
+				if (p.hasPermission("hideandcustomplugins.remove")){
+					if(!(args.length < 2) && !(args.length > 2)){
+						ArrayList<String> list = (ArrayList<String>) getConfig().getStringList("blocked-cmds");
+			            if (!list.contains(args[1])){
+			            	p.sendMessage(ChatColor.RED + "The Command " + ChatColor.YELLOW + "/" + args[1] + ChatColor.RED + " is not blocked!");
+			            }else{
+			              list.remove(args[1]);
+			              getConfig().set("blocked-cmds", list);
+			              saveConfig();
+			              p.sendMessage(ChatColor.GREEN + "Removed " + ChatColor.RED + "/" + args[1] + ChatColor.GREEN + " from the blacklist!");
+			            }
+				            return true;
+					}
+					if(args.length > 0){		  
+			    		  p.sendMessage("§cFalse or to many arguments!\n§a/hcp - Information about the plugin");
+			    		  return true;
+			    	}
+					if(args.length > 2){		  
+			    		  p.sendMessage("§cFalse or to many arguments!\n§a/hcp - Information about the plugin");
+			    		  return true;
+			    	}
+					
+		        }else{
+		        	 p.sendMessage("§cYou dont have the permission\n§c-hideandcustomplugins.add");
+		        	 return true;
+		        }
+			}
+			
+			if(args[0].equalsIgnoreCase("blacklist")){
+				if (p.hasPermission("hideandcustomplugins.blacklist")){
+					if(args.length == 1){
+						p.sendMessage(ChatColor.GREEN + "List of blocked commands:");
+			            for (String list : getConfig().getStringList("blocked-cmds")) {
+			              p.sendMessage(ChatColor.AQUA + "- " + list);
+			            }
+			            return true;
+					}
+					if(args.length > 1){		  
+			    		  p.sendMessage("§cFalse or to many arguments!\n§a/hcp - Information about the plugin");
+			    		  return true;
+			    	}
+		        }else{
+		        	 p.sendMessage("§cYou dont have the permission\n§c-hideandcustomplugins.blacklist");
+		        	 return true;
+		        }
+			}
 		}else{
 			if(args.length == 0){
 					sender.sendMessage("§e=========[ HideAndCustomPlugins | Version: " + ChatColor.YELLOW + version + " §e]=========");
 					sender.sendMessage("§9/hcp reload - Reloads the config.yml.\n");
+					sender.sendMessage("§9/hcp add <cmd> - Add a command to the blacklist.\n");
+					sender.sendMessage("§9/hcp remove <cmd> - Remove a command from the blacklist.\n");
+					sender.sendMessage("§9/hcp blacklist - Shows a list with the blocked commands.\n");
 					sender.sendMessage("§aHCP protects the server against pluginthieves");
 					sender.sendMessage("§5Version: " + ChatColor.DARK_PURPLE + version);
 					sender.sendMessage("§5Created by: " + ChatColor.DARK_PURPLE + "LauseggerDevelopment");
 					sender.sendMessage("§e=========[ HideAndCustomPlugins | Version: " + ChatColor.YELLOW + version + " §e]=========");
 					return true;
+			}
+			
+			if(args[0].equalsIgnoreCase("reload")){
+					if(args.length == 1){
+					reloadConfig();
+					sender.sendMessage(ChatColor.GREEN + "Reloaded the config.yml of " + getDescription().getName() + " v" + getDescription().getVersion());
+					return true;
+					}
+					if(args.length > 1){		  
+			    		  sender.sendMessage("§cFalse or to many arguments!\n§a/hcp - Information about the plugin");
+			    		  return true;
+			    	}
 			}
     	  
 			if((args.length > 0) && !(args[0].equalsIgnoreCase("reload"))){		  
@@ -275,7 +412,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 		}
     }
 	
-return false;
+	return false;
 	}
 
 	
