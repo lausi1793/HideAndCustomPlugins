@@ -130,7 +130,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	  public void onCommand(PlayerCommandPreprocessEvent event) {
 	    boolean plugins = event.getMessage().toLowerCase().startsWith("/plugins");
-	    boolean pl = event.getMessage().toLowerCase().startsWith("/pl") && !event.getMessage().toLowerCase().startsWith("/plotme") && !event.getMessage().toLowerCase().startsWith("/plot") && !event.getMessage().toLowerCase().startsWith("/plotgenversion") && !event.getMessage().toLowerCase().startsWith("/pluginmanager") && !event.getMessage().toLowerCase().startsWith("/plugman");
+	    boolean pl = event.getMessage().toLowerCase().startsWith("/pl");
 	    boolean gc = event.getMessage().equalsIgnoreCase("/gc");
 	    boolean icanhasbukkit = event.getMessage().toLowerCase().startsWith("/icanhasbukkit");
 	    boolean unknown = event.getMessage().toLowerCase().startsWith("/?");
