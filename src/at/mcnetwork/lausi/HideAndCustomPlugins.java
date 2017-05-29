@@ -33,7 +33,7 @@ import com.comphenix.protocol.events.PacketEvent;
 /**
  * 
  * @author Michael Lausegger | LauseggerDevelopment
- * @version 1.7.2
+ * @version 1.7.3
  * @since May 16, 2014
  *
  */
@@ -130,7 +130,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	  public void onCommand(PlayerCommandPreprocessEvent event) {
 	    boolean plugins = event.getMessage().toLowerCase().startsWith("/plugins");
-	    boolean pl = event.getMessage().toLowerCase().startsWith("/pl") && !event.getMessage().toLowerCase().startsWith("/plotme") && !event.getMessage().toLowerCase().startsWith("/plot") && !event.getMessage().toLowerCase().startsWith("/plotgenversion") && !event.getMessage().toLowerCase().startsWith("/pluginmanager") && !event.getMessage().toLowerCase().startsWith("/plugman");
+	    boolean pl = event.getMessage().toLowerCase().startsWith("/pl") && !event.getMessage().toLowerCase().startsWith("/plotme") && !event.getMessage().toLowerCase().startsWith("/plot") && !event.getMessage().toLowerCase().startsWith("/plotgenversion") && !event.getMessage().toLowerCase().startsWith("/pluginmanager") && !event.getMessage().toLowerCase().startsWith("/plugman") && !event.getMessage().toLowerCase().startsWith("/plane") && !event.getMessage().toLowerCase().startsWith("/planeshop") && !event.getMessage().toLowerCase().startsWith("/player") && !event.getMessage().toLowerCase().startsWith("/playtime");
 	    boolean gc = event.getMessage().equalsIgnoreCase("/gc");
 	    boolean icanhasbukkit = event.getMessage().toLowerCase().startsWith("/icanhasbukkit");
 	    boolean unknown = event.getMessage().toLowerCase().startsWith("/?");
@@ -165,7 +165,8 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    if(getConfig().getBoolean("disable-messages")){ 
 	    	if ((plugins) || (pl) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin) ||  (bukkitpl) || (version) || (ver) ||  (gc) ||  (icanhasbukkit) ||  (a) ||  (about) ||  (bukkitversion) ||  (bukkitver)||  (bukkitabout)  ||  (bukkita) ||  (bukkithelp)) {
 	 	    	if(!player.hasPermission("hideandcustomplugins.bypass")){
-	 	    		event.setCancelled(true);}
+	 	    		event.setCancelled(true);
+	 	    		}
 	 	    	}
 	    
 	    	}else{
