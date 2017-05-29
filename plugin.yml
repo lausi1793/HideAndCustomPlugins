@@ -1,7 +1,7 @@
 name: HideAndCustomPlugins
 main: at.mcnetwork.lausi.HideAndCustomPlugins
 depend: [ProtocolLib]
-version: 1.7.2
+version: 1.7.3
 author: LauseggerDevelopment
 website: http://dev.bukkit.org/bukkit-plugins/hideandcustomplugins/
 commands:
@@ -17,6 +17,9 @@ permissions:
       hideandcustomplugins.info: true
       hideandcustomplugins.bypass: true
       hideandcustomplugins.reload: true
+      hideandcustomplugins.add: true
+      hideandcustomplugins.remove: true
+      hideandcustomplugins.blacklist: true
     default: op
   hideandcustomplugins.reload:
     description: Reload of the config.yml.
@@ -24,3 +27,9 @@ permissions:
     description: Bypasses the plugin.
   hideandcustomplugins.info:
     description: Shows Information about the plugin.
+  hideandcustomplugins.add:
+    description: Add a command to the blacklist.
+  hideandcustomplugins.remove:
+    description: Remove a command from the blacklist.
+  hideandcustomplugins.blacklist:
+    description: Shows a list with the blocked commands.
