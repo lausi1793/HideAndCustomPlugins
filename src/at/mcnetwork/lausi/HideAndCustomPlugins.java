@@ -33,7 +33,7 @@ import com.comphenix.protocol.events.PacketEvent;
 /**
  * 
  * @author Michael Lausegger | LauseggerDevelopment
- * @version 1.7.3
+ * @version 1.8
  * @since May 16, 2014
  *
  */
