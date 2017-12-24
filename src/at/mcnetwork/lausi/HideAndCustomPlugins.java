@@ -33,7 +33,7 @@ import com.comphenix.protocol.events.PacketEvent;
 /**
  * 
  * @author Michael Lausegger | LauseggerDevelopment
- * @version 1.8
+ * @version 1.8.1
  * @since May 16, 2014
  *
  */
@@ -46,6 +46,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	String version;
 	String name;
 	
+	@SuppressWarnings("unused")
 	public void onEnable() {
 		version = getDescription().getVersion();
 		name = getDescription().getName();
@@ -55,10 +56,10 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 		try {
 			Metrics metrics = new Metrics(this); metrics.start();
 			Logger.getLogger("Minecraft").info("[" + name + "] Version: " + version + " Metrics started: http://mcstats.org/plugin/HideAndCustomPlugins");
-			
+			bstats bstats = new bstats(this);
+			Logger.getLogger("Minecraft").info("[" + name + "] Version: " + version + " Metrics started: https://bstats.org/plugin/bukkit/HideandCustomPlugins");
 			} catch (IOException e) {
 			System.out.println("Error Submitting stats!");
-			}
 		loadConfig();
 		Bukkit.getServer().getPluginManager().registerEvents(this, this);
 		
@@ -112,6 +113,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 		      this.plugins.add(s);
 		    }
 		Logger.getLogger("Minecraft").info("[" + name + "] Version: " + version + " Plugin has been activated successfully.");
+	    }
 	}
 	
 	
@@ -165,8 +167,7 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 	    if(getConfig().getBoolean("disable-messages")){ 
 	    	if ((plugins) || (pl) || (bukkitunknown) ||  (unknown) ||  (bukkitplugin) ||  (bukkitpl) || (version) || (ver) ||  (gc) ||  (icanhasbukkit) ||  (a) ||  (about) ||  (bukkitversion) ||  (bukkitver)||  (bukkitabout)  ||  (bukkita) ||  (bukkithelp)) {
 	 	    	if(!player.hasPermission("hideandcustomplugins.bypass")){
-	 	    		event.setCancelled(true);
-	 	    		}
+	 	    		event.setCancelled(true);}
 	 	    	}
 	    
 	    	}else{
