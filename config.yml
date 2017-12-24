@@ -1,7 +1,10 @@
 ###
-# HideAndCustomPlugins by the Austrian Developer LauseggerDevelopment (lausi1793)
+# HideAndCustomPlugins by the Austrian Developer Michael Lausegger
 # HideAndCustomPlugins on DevBukkit: http://dev.bukkit.org/bukkit-plugins/hideandcustomplugins/
+# HideAndCustomPlugins on Spigot: http://www.spigotmc.org/resources/hideandcustomplugins.4503/
 # HideAndCustomPlugins on Github: https://github.com/lausi1793/HideAndCustomPlugins
+# HideAndCustomPlugins on mcstats: http://mcstats.org/plugin/HideAndCustomPlugins
+# HideAndCustomPlugins on bstats: https://bstats.org/plugin/bukkit/HideandCustomPlugins
 ###
 
 ###
@@ -10,17 +13,30 @@
 # true: Only check if there is a new version available, notify appropriate people.
 # false: Ignore Updater altogether.
 ###
-updateNotification: true
+update-notification: true
 
 ###
 # Silently disable Helpmessage without displaying messages.
 #
 # This takes a value of either "true" or "false"
 ###
-disableHelpCommand: false
+disable-help-command: false
 
 ###
-# Custom plugins
+# Enable potions, when somebody is attempt tu steal your plugins!
+#
+# This takes a value of either "true" or "false"
+# effects you can use: blindness, slowness, confusion, weakness or none
+# time in seconds
+# sounds you can use: endermen, blaze, enderdragon, guardian, ghast or none
+###
+use-potions: true
+effect: confusion
+time: 120
+sound: blaze
+
+###
+# Customize your plugins
 #
 # Type here your custom plugins for the message, which is given to the players
 ###
@@ -31,12 +47,22 @@ plugins: Here, is, nothing, to, see
 #
 # This takes a value of either "true" or "false"
 ###
-disableMessages: false
+disable-messages: false
 
 ###
 # Custom error message
 #
 # Type here your custom error message, which is given to the players
 ###
-AccessDenied: 'I dont think so ...'
+error-message: 'I dont think so ...'
 
+###
+# Blocked commands
+#
+# Type here your custom commands, which should be blocked.
+# If you have not got the hideandcustomplugins.bypass permission you cannot type this commands
+###
+blocked-cmds:
+- op
+- minecraft:me
+- plugman list
