@@ -31,7 +31,7 @@ public class Updater{
   {
     this.main = main;
     this.id = id;
-    this.version = Integer.valueOf(main.getDescription().getVersion().replaceAll("\\.", "")).intValue();
+    this.version = Integer.valueOf(main.getDescription().getVersion().replaceAll("\\.", ""));
     this.link = link;
     this.configValue = configValue;
     this.url = new URL("https://api.curseforge.com/servermods/files?projectIds=" + id);
