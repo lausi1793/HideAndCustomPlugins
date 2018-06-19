@@ -30,15 +30,17 @@ disable-help-command: false
 # time in seconds
 # sounds you can use: endermen, blaze, enderdragon, guardian, ghast or none
 ###
-use-potions: true
-effect: confusion
-time: 120
-sound: blaze
+potions-on-plugin-command:
+    enabled: true
+    effect: confusion
+    time: 120
+    sound: blaze
 
 ###
 # Customize your plugins
 #
 # Type here your custom plugins for the message, which is given to the players
+# If you want your commands to be invisible, try "Unknown command. Type "/help" for help."
 ###
 plugins: Here, is, nothing, to, see
 
