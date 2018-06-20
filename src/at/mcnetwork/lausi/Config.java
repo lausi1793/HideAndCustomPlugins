@@ -129,11 +129,13 @@ public class Config {
 		update_notify = cfg.getBoolean(UPDATE_SETTING_PATH);
 		// deprecating this config, since it's better to expose the setting to the server op
 		if (cfg.contains("disable-messages")) {
-			for (List<String> commandList : new List[]{
-				Arrays.asList("bukkit:ver", "bukkit:version", "icanhasbukkit", "ver", "version", "about", "bukkit:about"),
-				pluginlistBlacklist}) {
-				for (String c : commandList) {
-					addToBlacklist(c, false);
+			if(cfg.getBoolean("disable-messages")) {
+				for (List<String> commandList : new List[]{
+					Arrays.asList("bukkit:ver", "bukkit:version", "icanhasbukkit", "ver", "version", "about", "bukkit:about"),
+					pluginlistBlacklist}) {
+					for (String c : commandList) {
+						addToBlacklist(c, false);
+					}
 				}
 			}
 			cfg.set("disable-messages", null);
