@@ -210,6 +210,56 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 				break;
 				
 				
+			case "addplugin":
+			case "ap":
+				if (sender.hasPermission("hideandcustomplugins.add")) {
+					if(args.length >= 2) { // we're just going to ignore extra arguments for now
+						Plugin p = getServer().getPluginManager().getPlugin(args[1]);
+						if(p == null) {
+							// plugin manager is case-sensitive...
+							for(Plugin pl : getServer().getPluginManager().getPlugins()) {
+								if(pl != null && args[1].equalsIgnoreCase(pl.getName())) {
+									p = pl;
+									break;
+								}
+							}
+						}
+						if(p != null) {
+							if (config.addToPluginBlacklist(p.getName())) {
+								sender.sendMessage(ChatColor.GREEN + "Added Plugin " + ChatColor.RED + p.getName() + ChatColor.GREEN + " to the blacklist!");
+							} else {
+								sender.sendMessage(ChatColor.RED + "The Plugin " + ChatColor.YELLOW + p.getName() + ChatColor.RED + " is already blocked!");
+							}
+						} else {
+							sender.sendMessage(ChatColor.RED + "The Plugin " + ChatColor.YELLOW + args[1] + ChatColor.RED + " was not found on the server!");
+						}
+					} else {
+						sender.sendMessage("§cMissing plugin to add!\n§a/hcp - Information about the plugin");
+					}
+				} else {
+					sender.sendMessage("§cYou dont have the permission\n§c-hideandcustomplugins.remove");
+				}
+				break;
+				
+				
+			case "removeplugin":
+			case "rp":
+				if (sender.hasPermission("hideandcustomplugins.remove")) {
+					if (args.length >= 2) {
+						if (config.removeFromPluginBlacklist(args[1])) {
+							sender.sendMessage(ChatColor.GREEN + "Removed Plugin " + ChatColor.RED + args[1] + ChatColor.GREEN + " from the blacklist!");
+						} else {
+							sender.sendMessage(ChatColor.RED + "The Plugin " + ChatColor.YELLOW + args[1] + ChatColor.RED + " is not blocked!");
+						}
+					} else {
+						sender.sendMessage("§cMissing plugin to remove!\n§a/hcp - Information about the plugin");
+					}
+				} else {
+					sender.sendMessage("§cYou dont have the permission\n§c-hideandcustomplugins.add");
+				}
+				break;
+				
+				
 			case "blacklist":
 				if (sender.hasPermission("hideandcustomplugins.blacklist")) {
 					if (args.length == 1) {
@@ -290,6 +340,8 @@ public class HideAndCustomPlugins extends JavaPlugin implements Listener {
 				sender.sendMessage("§9/hcp remove <cmd> - Remove a command from the blacklist.\n");
 				sender.sendMessage("§9/hcp addwhite <cmd> - Add a command to the whitelist.\n");
 				sender.sendMessage("§9/hcp removewhite <cmd> - Remove a command from the whitelist.\n");
+				sender.sendMessage("§9/hcp addplugin <cmd> - Add a plugin to the blacklist.\n");
+				sender.sendMessage("§9/hcp removeplugin <cmd> - Remove a plugin from the blacklist.\n");
 				sender.sendMessage("§9/hcp blacklist - Shows a list with the blocked commands.\n");
 				sender.sendMessage("§9/hcp whitelist - Shows a list with the allowed commands.\n");
 				sender.sendMessage("§aHCP protects the server against pluginthieves");

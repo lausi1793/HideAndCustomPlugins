@@ -92,6 +92,12 @@ public class Config {
 			synchronized (blacklist) {
 				cfg.set("blocked-cmds", blacklist);
 			}
+			synchronized (whitelist) {
+				cfg.set("allowed-cmds", whitelist);
+			}
+			synchronized (plugin_blacklist) {
+				cfg.set("blocked-plugins", plugin_blacklist);
+			}
 			plugin.saveConfig();
 		}
 	}
@@ -295,6 +301,33 @@ public class Config {
 		return editList(args, start, blacklist, false);
 	}
 
+	/**
+	 * Add a plugin to the plugin blacklist
+	 *
+	 * @param pluginName
+	 * @return true if the plugin was added without duplicates
+	 */
+	public boolean addToPluginBlacklist(String pluginName) {
+		if(!plugin_blacklist.contains(pluginName = pluginName.toLowerCase())) {
+			plugin_blacklist.add(pluginName);
+			save();
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Remove a command from the blocked commands list using arguments after
+	 * {@code start} as one command
+	 *
+	 * @param pluginName
+	 * @return true if the command existed and was removed <br>
+	 * {@code args[start]} will have the concatenated command
+	 */
+	public boolean removeFromPluginBlacklist(String pluginName) {
+		return plugin_blacklist.remove(pluginName.toLowerCase()) && save();
+	}
+	
 	/**
 	 * Add everything in the arguments list after {@code start} as one command
 	 *
