@@ -369,10 +369,7 @@ public class Config {
 	 * @return true if the command was added without duplicates
 	 */
 	public boolean addToBlacklist(String command, boolean resort) {
-		if ((command = command.toLowerCase()).startsWith("/")) {
-			command = command.substring(1);
-		}
-		removeFromWhitelist(command);
+		removeFromWhitelist(command = command.toLowerCase());
 		if (!blacklist.contains(command) && blacklist.add(command)) {
 			if (resort) {
 				Collections.sort(blacklist);
@@ -403,10 +400,7 @@ public class Config {
 	 * @return true if the command was added without duplicates
 	 */
 	public boolean addToWhitelist(String command, boolean resort) {
-		if ((command = command.toLowerCase()).startsWith("/")) {
-			command = command.substring(1);
-		}
-		if (!whitelist.contains(command) && whitelist.add(command)) {
+		if (!whitelist.contains(command = command.toLowerCase()) && whitelist.add(command)) {
 			if (resort) {
 				Collections.sort(whitelist);
 			}
