@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 public class TabCompleteListener {
@@ -37,10 +38,12 @@ public class TabCompleteListener {
 						List<String> canUse = new LinkedList<String>();
 						canUse.addAll(config.whitelist);
 						boolean useAll = event.getPlayer().hasPermission("hideandcustomplugins.plugin.*");
-						for(Map.Entry<String, List<String>> e : config.plugin_blacklist.entrySet()) {
-							if(e.getValue() != null && !e.getValue().isEmpty() && 
-									(useAll || event.getPlayer().hasPermission("hideandcustomplugins.plugin." + e.getKey()))) {
-								canUse.addAll(e.getValue());
+						for(String pluginName : config.plugin_blacklist) {
+							if(pluginName != null && (useAll || event.getPlayer().hasPermission("hideandcustomplugins.plugin." + pluginName))) {
+								Plugin p = Bukkit.getPluginManager().getPlugin(pluginName);
+								if(p != null) {
+									canUse.addAll(p.getDescription().getCommands().keySet());
+								}
 							}
 						}
 						tabList = canUse.toArray(new String[canUse.size()]);
