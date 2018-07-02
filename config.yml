@@ -16,11 +16,24 @@
 update-notification: true
 
 ###
-# Silently disable Helpmessage without displaying messages.
+# Replace the help commands with our own text
 #
 # This takes a value of either "true" or "false"
 ###
-disable-help-command: false
+replace-help: false
+
+###
+# What the help message should be
+# 
+# Note that there isn't any significance to the key names, the pages will be added sequentially
+help-pages:
+    1: 
+    - This is the custom help page
+    - The first page, specifically
+    - You can have pages be as large or small as you want
+    2:
+    - Just remember that a line that is too long will be wrapped by minecraft automatically, and might mess with
+    - your spacing
 
 ###
 # Enable potions, when somebody is attempt tu steal your plugins!
@@ -30,24 +43,19 @@ disable-help-command: false
 # time in seconds
 # sounds you can use: endermen, blaze, enderdragon, guardian, ghast or none
 ###
-use-potions: true
-effect: confusion
-time: 120
-sound: blaze
+potions-on-plugin-command:
+    enabled: true
+    effect: confusion
+    time: 120
+    sound: blaze
 
 ###
 # Customize your plugins
 #
 # Type here your custom plugins for the message, which is given to the players
+# If you want your commands to be invisible, try "Unknown command. Type "/help" for help."
 ###
 plugins: Here, is, nothing, to, see
-
-###
-# Silently disable all messages, which are showing information about your server or the plugins without displaying messages.
-#
-# This takes a value of either "true" or "false"
-###
-disable-messages: false
 
 ###
 # Custom error message
@@ -57,12 +65,57 @@ disable-messages: false
 error-message: 'I dont think so ...'
 
 ###
+# Automatically block commands that the player doesn't have access to
+#
+# If a command isn't on the blacklist, check to see if this command has a permission assigned to it
+# Then block the command if the player doesn't have the permission to use it
+###
+auto-block-no-permissions: true
+
+###
+# Should we try to block all aliases, too?
+# 
+# If true, we'll automatically block all aliases for defined commands
+# We'll also lookup commands added and use the full command if an alias is added
+###
+auto-lookup-command-aliases: true
+
+###
 # Blocked commands
 #
 # Type here your custom commands, which should be blocked.
 # If you have not got the hideandcustomplugins.bypass permission you cannot type this commands
 ###
 blocked-cmds:
-- op
+- bukkit:ver
+- bukkit:version
+- icanhasbukkit
+- ver
+- version
+- about
+- ?
+- bukkit:?
+- help
+- bukkit:help
+- bukkit:about
 - minecraft:me
 - plugman list
+
+###
+# Allowed commands
+# 
+# These commands are always allowed to run
+# They will also show up in tab-complete menu for players without hideandcustomplugins.bypass
+###
+allowed-cmds:
+- spawn
+- home
+
+# Blocked Plugins
+#
+# This will automatically block all commands from any of these plugins
+# hideandcustomplugins.bypass or hideandcustomplugins.plugin.<plugin_name> is needed to access these plugins
+# Notice: plugins that don't register their commands normally (like WorldEdit) cannot be blocked this way
+###
+blocked-plugins:
+- HideAndCustomPlugins

@@ -13,92 +13,95 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
-public class Updater{
-  public String versionName;
-  @SuppressWarnings("unused")
-  private final int id;
-  private int task;
-  private final URL url;
-  public final JavaPlugin main;
-  private int remoteVersion;
-  private final int version;
-  public String verwith;
-  public String link;
-  private String configValue;
+public class Updater {
 
-  public Updater(JavaPlugin main, int id, String link, String configValue)
-    throws MalformedURLException
-  {
-    this.main = main;
-    this.id = id;
-    this.version = Integer.valueOf(main.getDescription().getVersion().replaceAll("\\.", "")).intValue();
-    this.link = link;
-    this.configValue = configValue;
-    this.url = new URL("https://api.curseforge.com/servermods/files?projectIds=" + id);
-  }
+	private String remoteVersionName;
+	private int remoteVersion;
+	private final int ourVersion;
+	private int task;
+	private final URL url;
+	public final JavaPlugin main;
+	public String verwith;
+	public String link;
+	private String configValue;
 
-public void search() {
-    if (!isEnabled()) {
-      return;
-    }
-    this.task = this.main.getServer().getScheduler().scheduleSyncDelayedTask(this.main, new Runnable()
-    {
-      public void run() {
-        if (!Updater.this.read()) {
-          return;
-        }
-        if (Updater.this.versionCheck(Updater.this.versionName)) {
-          Updater.this.main.getLogger().warning("A new update is available! (" + Updater.this.verwith + ") current: " + Updater.this.main.getDescription().getVersion());
-          Updater.this.main.getLogger().warning("You can get it at: " + Updater.this.link);
-        }
-        Updater.this.main.getServer().getScheduler().cancelTask(Updater.this.task);
-      }
-    }
-    , 200L);
-  }
+	public Updater(JavaPlugin main, int id, String link, String configValue) {
+		this.main = main;
+		this.ourVersion = Integer.valueOf(main.getDescription().getVersion().replaceAll("\\.", ""));
+		this.link = link;
+		this.configValue = configValue;
+		URL u = null;
+		try {
+			u = new URL("https://api.curseforge.com/servermods/files?projectIds=" + id);
+		} catch (MalformedURLException ex) {
+		}
+		this.url = u;
+	}
 
-  public void search(Player player)
-  {
-    if (!read()) {
-      return;
-    }
-    if (versionCheck(this.versionName)) {
-      player.sendMessage(ChatColor.GOLD + this.main.getDescription().getName() + ChatColor.GRAY + " A new update is available! \n(" + this.verwith + ") current: " + this.main.getDescription().getVersion());
-      player.sendMessage(ChatColor.GOLD + this.main.getDescription().getName() + ChatColor.GRAY + " You can get it at: \n" + this.link);
-    }
-  }
+	public void search() {
+		if (!isEnabled()) {
+			return;
+		}
+		this.task = this.main.getServer().getScheduler().scheduleSyncDelayedTask(this.main, new Runnable() {
+			@Override
+			public void run() {
+				if (!Updater.this.read()) {
+					return;
+				}
+				if (Updater.this.versionCheck(Updater.this.remoteVersionName)) {
+					Updater.this.main.getLogger().warning("A new update is available! (" + Updater.this.verwith + ") current: " + Updater.this.main.getDescription().getVersion());
+					Updater.this.main.getLogger().warning("You can get it at: " + Updater.this.link);
+				}
+				Updater.this.main.getServer().getScheduler().cancelTask(Updater.this.task);
+			}
+		},
+				200L);
+	}
 
-  public boolean versionCheck(String title) {
-    String[] titleParts = title.split(" v");
-    this.remoteVersion = Integer.valueOf(titleParts[1].split(" ")[0].replaceAll("\\.", "")).intValue();
-    this.verwith = titleParts[1].split(" ")[0];
-    if (this.version > this.remoteVersion) {
-      return false;
-    }
-    return (this.version != this.remoteVersion) && (this.version <= this.remoteVersion);
-  }
+	public void search(Player player) {
+		if (!read()) {
+			return;
+		}
+		if (versionCheck(this.remoteVersionName)) {
+			player.sendMessage(ChatColor.GOLD + this.main.getDescription().getName() + ChatColor.GRAY + " A new update is available! \n(" + this.verwith + ") current: " + this.main.getDescription().getVersion());
+			player.sendMessage(ChatColor.GOLD + this.main.getDescription().getName() + ChatColor.GRAY + " You can get it at: \n" + this.link);
+		}
+	}
 
-  public boolean read() {
-    try {
-      URLConnection conn = this.url.openConnection();
-      conn.setConnectTimeout(5000);
-      conn.setDoOutput(true);
+	private boolean versionCheck(String title) {
+		String[] titleParts = title.split(" v");
+		this.remoteVersion = Integer.valueOf(titleParts[1].split(" ")[0].replaceAll("\\.", ""));
+		this.verwith = titleParts[1].split(" ")[0];
+		if (this.ourVersion > this.remoteVersion) {
+			return false;
+		}
+		return (this.ourVersion != this.remoteVersion) && (this.ourVersion <= this.remoteVersion);
+	}
 
-      BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-      String response = reader.readLine();
+	public boolean read() {
+		if (url == null) {
+			return false;
+		}
+		try {
+			URLConnection conn = this.url.openConnection();
+			conn.setConnectTimeout(5000);
+			conn.setDoOutput(true);
 
-      JSONArray array = (JSONArray)JSONValue.parse(response);
-      if (array.size() == 0) {
-        return false;
-      }
-      this.versionName = ((String)((JSONObject)array.get(array.size() - 1)).get("name"));
-      return true;
-    } catch (Exception e) {
-    }
-    return false;
-  }
+			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			String response = reader.readLine();
 
-  public boolean isEnabled() {
-	  return this.main.getConfig().getBoolean(this.configValue, true);
-  }
+			JSONArray array = (JSONArray) JSONValue.parse(response);
+			if (array.isEmpty()) {
+				return false;
+			}
+			this.remoteVersionName = ((String) ((JSONObject) array.get(array.size() - 1)).get("name"));
+			return true;
+		} catch (Exception e) {
+		}
+		return false;
+	}
+
+	public boolean isEnabled() {
+		return url != null && this.main.getConfig().getBoolean(this.configValue, true);
+	}
 }
